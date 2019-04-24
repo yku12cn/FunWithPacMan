@@ -97,7 +97,7 @@ public class RunTest {
 		defaultConstants = new Constants();
 		
 		//train params
-		LENGTH = 300; //how many train episodes
+		LENGTH = 400; //how many train episodes
 		TEST = 1;
 				
 		mazeNum = 2; //which maze;
