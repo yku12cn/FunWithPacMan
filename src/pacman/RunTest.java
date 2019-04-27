@@ -99,11 +99,11 @@ public class RunTest {
     public static void human(){
 	    HumanController human = new HumanController(new KeyBoardInput());
         defaultConstants = new Constants();
-        defaultConstants.MAZE_NUM = 2; //which maze;
-        defaultConstants.GHOST_TYPE = 1; //which of three types of ghosts 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
+        defaultConstants.MAZE_NUM = mazeNum; //which maze;
+        defaultConstants.GHOST_TYPE = ghostType; //which of three types of ghosts 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
         // Controls how fast ghosts move when pacman has eaten power pill. Lower numbers = slower (1 = frozen).
-        defaultConstants.GHOST_SPEED_REDUCTION = 2; //ghost speed
-        defaultConstants.NUM_GHOSTS = 4; //how many ghosts
+        defaultConstants.GHOST_SPEED_REDUCTION = ghostSlowdown; //ghost speed
+        defaultConstants.NUM_GHOSTS = nGhosts; //how many ghosts
 
         //increase delay for watching
         defaultConstants.DELAY = defaultConstants.DELAY*10;
