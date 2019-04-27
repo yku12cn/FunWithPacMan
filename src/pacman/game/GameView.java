@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.internal.Node;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -162,10 +164,15 @@ public final class GameView extends JComponent
      */
     private void drawMaze()
     {
-    	bufferGraphics.setColor(Color.BLACK);
+    	bufferGraphics.setColor(Color.gray);
     	bufferGraphics.fillRect(0,0,GV_WIDTH*MAG,GV_HEIGHT*MAG+20);
-        
-    	bufferGraphics.drawImage(images.getMaze(game.getMazeIndex()),2,6,null);
+
+    	Node[] nodeIndices = game.currentMaze.graph;
+
+		bufferGraphics.setColor(Color.black);
+    	for(Node a : nodeIndices){
+    		bufferGraphics.fillOval(a.x*MAG-2,a.y*MAG+2, 15,15);
+		}
     }
 
     /**
