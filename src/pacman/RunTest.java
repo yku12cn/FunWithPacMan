@@ -31,30 +31,39 @@ public class RunTest {
 	 * Run experiments.
 	 */
 	public static void main(String[] args) {
-		defaultConstants = new Constants();
-		defaultConstants.MAZE_NUM = 2; //which maze;
-		defaultConstants.GHOST_TYPE = 1; //which of three types of ghosts 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
-		// Controls how fast ghosts move when pacman has eaten power pill. Lower numbers = slower (1 = frozen).
-		defaultConstants.GHOST_SPEED_REDUCTION = 2; //ghost speed
-		defaultConstants.NUM_GHOSTS = 4; //how many ghosts
-
-		//increase delay for watching
-		defaultConstants.DELAY = defaultConstants.DELAY*10;
-
-
-		Game game=new Game(rng.nextLong(), defaultConstants);
-		GameView gv=new GameView(game).showGame();
-
-		gv.getFrame().addKeyListener(human.getKeyboardInput());
-
-		while(!game.gameOver()) {
-			game.advanceGame(human.getMove(game,-1), getGhostMove(game, game.constants.GHOST_TYPE));
-
-			try{Thread.sleep(defaultConstants.DELAY);}catch(Exception e){}
-			gv.repaint();
-		}
-		
+        human();
 	}
+
+	/** Human demo **/
+    public static void human(){
+	    HumanController human = new HumanController(new KeyBoardInput());
+        defaultConstants = new Constants();
+        defaultConstants.MAZE_NUM = 2; //which maze;
+        defaultConstants.GHOST_TYPE = 1; //which of three types of ghosts 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
+        // Controls how fast ghosts move when pacman has eaten power pill. Lower numbers = slower (1 = frozen).
+        defaultConstants.GHOST_SPEED_REDUCTION = 2; //ghost speed
+        defaultConstants.NUM_GHOSTS = 0; //how many ghosts
+
+        //increase delay for watching
+        defaultConstants.DELAY = defaultConstants.DELAY*10;
+
+
+        Game game=new Game(rng.nextLong(), defaultConstants);
+        GameView gv=new GameView(game).showGame();
+
+        gv.getFrame().addKeyListener(human.getKeyboardInput());
+
+        while(!game.gameOver()) {
+            game.advanceGame(human.getMove(game, -1), getGhostMove(game, game.constants.GHOST_TYPE));
+
+            try {
+                Thread.sleep(defaultConstants.DELAY);
+            } catch (Exception e) {
+            }
+            gv.repaint();
+        }
+    }
+
 
 	private static EnumMap<GHOST, MOVE> getGhostMove(Game game, int ghostType){
 

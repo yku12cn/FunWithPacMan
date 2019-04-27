@@ -164,14 +164,14 @@ public final class GameView extends JComponent
      */
     private void drawMaze()
     {
-    	bufferGraphics.setColor(Color.gray);
-    	bufferGraphics.fillRect(0,0,GV_WIDTH*MAG,GV_HEIGHT*MAG+20);
+		bufferGraphics.setColor(Color.gray);
+		bufferGraphics.fillRect(0,0,GV_WIDTH*MAG,GV_HEIGHT*MAG+20);
 
-    	Node[] nodeIndices = game.currentMaze.graph;
+		Node[] nodeIndices = game.currentMaze.graph;
 
 		bufferGraphics.setColor(Color.black);
-    	for(Node a : nodeIndices){
-    		bufferGraphics.fillOval(a.x*MAG-2,a.y*MAG+2, 15,15);
+		for(Node a : nodeIndices){
+			bufferGraphics.fillOval(a.x*MAG-2,a.y*MAG+2, 15,15);
 		}
     }
 
