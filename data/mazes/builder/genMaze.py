@@ -1,10 +1,39 @@
-
-
 import mazeBuilder
+import subprocess
 
 
 def main():
-  fourBox()
+  tshape()
+  
+
+def box():
+  m = mazeBuilder.Maze()
+  m.addRow(0, 100)
+  m.addCol(0, 20)
+  m.addRow(120, 100)
+  m.addCol(100, 20)
+  m.addCol(50, 20)
+  m.dispersePills(4)
+  m.setPower(0)
+  m.setStartNodes(25, 100)
+  m.setGhostLair(50,50)
+  m.checkMaze()
+  m.save('mymaze')
+
+def tshape():
+  name = 'mymaze'
+  m = mazeBuilder.Maze()
+  m.addRow(0,50)
+  m.addCol(25,25)
+  m.linkNodes(0,50,6)
+  m.linkNodes(25,75,3)
+  m.dispersePills(4)
+  m.setPower(0)
+  m.setStartNodes(25, 49)
+  m.setGhostLair(50,50)
+  m.checkMaze()
+  m.save(name)
+  subprocess.call(["python","calcDistances.py",name+".txt"])
 
 def fourBox():
   m = mazeBuilder.Maze()
