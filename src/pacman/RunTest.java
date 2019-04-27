@@ -65,7 +65,7 @@ public class RunTest {
 	public static String STUDENT = "depthS"; // Student feature set and algorithm
 	
 	
-	public static int LENGTH = 500; // 10; // 100; // Points per curve
+	public static int LENGTH = 400; // 10; // 100; // Points per curve
 	public static int TEST = 1; //30; // Test episodes per point
 	public static int TRAIN = 1; //10 // Train episodes per point
 
@@ -80,7 +80,7 @@ public class RunTest {
     public static int ghostType = 0;		// 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
     
     // Task parameters
-    public static int mazeNum = 0;
+    public static int mazeNum = 4;
     // Controls how fast ghosts move when pacman has eaten power pill. Lower numbers = slower (1 = frozen). 
     public static int ghostSlowdown = 2;
     public static int nGhosts = 4;
@@ -128,15 +128,8 @@ public class RunTest {
     /** RL demo **/
 	public static void demo(){
 		defaultConstants = new Constants();
-		
-		//train params
-		LENGTH = 400; //how many train episodes
-		TEST = 1;
-				
-		mazeNum = 2; //which maze;
-		ghostType = 1; //which of three types of ghosts
-		ghostSlowdown = 2; //ghost speed when edible
-		nGhosts = 4; //how many ghosts
+
+		//Use Global parameters instead!
 		
 		defaultConstants.MAZE_NUM = mazeNum; //which maze;
 		defaultConstants.GHOST_TYPE = ghostType; //which of three types of ghosts

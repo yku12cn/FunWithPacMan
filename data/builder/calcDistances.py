@@ -1,4 +1,5 @@
 import sys
+import os
 import numpy
 import Queue
 
@@ -40,7 +41,9 @@ def main():
 
   # Read the maze file
   mazeFile = sys.argv[1]
-  outFile = 'd' + mazeFile
+  outFile =  os.path.basename(mazeFile)
+  outFile = os.path.splitext(outFile)[0]
+  outFile = 'd' + outFile
   f = open(mazeFile, 'r')
 
   # Header
