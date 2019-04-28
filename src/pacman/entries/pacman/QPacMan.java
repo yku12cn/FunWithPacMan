@@ -23,7 +23,7 @@ public class QPacMan extends BasicRLPacMan {
 	private int lastActionIndex; // Index of action actually being taken
 	private boolean testMode; // Don't explore or learn or take advice?
 
-	private double EPSILON = 0.05; // Exploration rate
+	private double EPSILON = 0.5; // Exploration rate
 	private double ALPHA = 0.001; // Learning rate
 	private double GAMMA = 0.999; // Discount rate
 	private double LAMBDA = 0.7; // Backup weighting
