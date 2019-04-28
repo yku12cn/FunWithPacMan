@@ -80,10 +80,10 @@ public class RunTest {
     public static int ghostType = 0;		// 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
     
     // Task parameters
-    public static int mazeNum = 4;
+    public static int mazeNum = 2;
     // Controls how fast ghosts move when pacman has eaten power pill. Lower numbers = slower (1 = frozen). 
     public static int ghostSlowdown = 2;
-    public static int nGhosts = 4;
+    public static int nGhosts = 1;
     
     public static Constants defaultConstants;
     

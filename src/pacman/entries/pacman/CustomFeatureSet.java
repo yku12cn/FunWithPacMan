@@ -98,7 +98,8 @@ public class CustomFeatureSet extends FeatureSet {
 		// Feast opportunity?
 		double[] startPath = {MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE};
 		double[] feastPath = exploreFeasts(game, node, move, 0, 0, startPath);
-		double feastScore = score(feastPath);
+		//double feastScore = score(feastPath);
+        double feastScore = score(feastPath,game);
 
 		// Upcoming feast opportunity?
 		double futureFeastScore = 0;
@@ -106,7 +107,8 @@ public class CustomFeatureSet extends FeatureSet {
 		for (MOVE possibleMove : possibleMoves) {
 			double[] initialPath = {MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE};
 			double[] path = exploreEnemies(game, node, possibleMove, 0, 0, initialPath);
-			futureFeastScore = Math.max(futureFeastScore, score(path));
+			//futureFeastScore = Math.max(futureFeastScore, score(path));
+            futureFeastScore = Math.max(futureFeastScore, score(path,game));
 		}
 
 		// Features
@@ -227,14 +229,16 @@ public class CustomFeatureSet extends FeatureSet {
 			if (game.isJunction(node)) {
 
 				double[] bestPath = path;
-				double bestScore = score(path);
+				//double bestScore = score(path);
+                double bestScore = score(path,game);
 
 				MOVE[] possibleMoves = game.getPossibleMoves(node, move);
 				for (MOVE possibleMove : possibleMoves) {
 
 					double[] pathCopy = Arrays.copyOf(path, path.length);
 					double[] newPath = exploreEnemies(game, node, possibleMove, depth+1, distance, pathCopy);
-					double newScore = score(newPath);
+					//double newScore = score(newPath);
+                    double newScore = score(newPath,game);
 
 					if (newScore > bestScore) {
 						bestPath = newPath;
@@ -295,14 +299,16 @@ public class CustomFeatureSet extends FeatureSet {
 			if (game.isJunction(node)) {
 
 				double[] bestPath = path;
-				double bestScore = score(path);
+				//double bestScore = score(path);
+                double bestScore = score(path,game);
 
 				MOVE[] possibleMoves = game.getPossibleMoves(node, move);
 				for (MOVE possibleMove : possibleMoves) {
 
 					double[] pathCopy = Arrays.copyOf(path, path.length);
 					double[] newPath = exploreFeasts(game, node, possibleMove, depth+1, distance, pathCopy);
-					double newScore = score(newPath);
+					//double newScore = score(newPath);
+                    double newScore = score(newPath,game);
 
 					if (newScore > bestScore) {
 						bestPath = newPath;
@@ -320,10 +326,16 @@ public class CustomFeatureSet extends FeatureSet {
 	}
 
 	/** Compute the score of a ghost path. Closer ghosts mean higher scores. */
-	private double score(double[] path) {
+	private double score(double[] path,Game game) {
 		double score = 0;
-		for (int i=0; i<path.length; i++)	
-			score += Math.pow((MAX_DISTANCE - path[i])/4, 2);
+		//if (hasPowerPillAvailable(game)) {
+            for (int i = 0; i < path.length; i++)
+                score += Math.pow((MAX_DISTANCE-path[i]) / 4, 2);
+        //}
+        //else {
+        //    for (int i = 0; i < path.length; i++)
+        //        score += Math.pow((path[i]) / 4, 2);
+        //}
 		return score / path.length;
 	}
 
@@ -369,4 +381,10 @@ public class CustomFeatureSet extends FeatureSet {
 
 		return distances;
 	}
+	public boolean hasPowerPillAvailable(Game game) {
+        int [] indexs = game.getPowerPillIndices();
+        if (indexs.length==0) return false;
+        return true;
+
+    }
 }
