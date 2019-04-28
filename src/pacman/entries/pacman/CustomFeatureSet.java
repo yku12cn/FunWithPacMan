@@ -86,13 +86,16 @@ public class CustomFeatureSet extends FeatureSet {
 
 		// Safety of junctions?
 // Basically checks the most safe junction at each depth, and constrains by first junction.
-// Seems like it should be constraining by all the ones before and not just the first... 
+// Seems like it should be constraining by all the ones before and not just the first...
+		// I implemented the comment above
 		double[] safety = new double[DEPTH];
+		double min = Double.POSITIVE_INFINITY;
 		for (int i=0; i<DEPTH; i++) {
 			for (Integer n : junctions.get(i).keySet()) {
 				safety[i] = Math.max(safety[i], junctions.get(i).get(n));
-				safety[i] = Math.min(safety[0], safety[i]);
+				safety[i] = Math.min(min, safety[i]);
 			}
+			min = Math.min(safety[i], min);
 		}
 
 		// Feast opportunity?
@@ -331,23 +334,23 @@ public class CustomFeatureSet extends FeatureSet {
 // Calculates a score of safety for reaching a node that is myDistance away from current position
 // It's basically just the difference in distance between you and the closest ghost to the target. 	
 	private double safety(Game game, Integer node, double myDistance) {
-		double[] enemyDistances = enemyNodeDistances(game, node);
-		Arrays.sort(enemyDistances);
-		//return enemyDistances[0] - myDistance - game.constants.EAT_DISTANCE;
-		if (enemyDistances[0] == MAX_DISTANCE)
-			return enemyDistances[0];// there is no ghosts, consider it safe
+
+		double enemyDistances = enemyNodeDistances(game, node);
+		if (enemyDistances == MAX_DISTANCE)
+			return enemyDistances;// there is no ghosts, consider it safe
 		else 
-			return enemyDistances[0] - myDistance - game.constants.EAT_DISTANCE;
+			return enemyDistances - myDistance - game.constants.EAT_DISTANCE;
 	}
 
 	/** Compute relevant enemy distances to a nearby node. */
 // If the ghost is edible, he is shown as max distance. This is paired with safety, so essentially
 // if a ghost is edible, that node will have a high safety score.
-	private double[] enemyNodeDistances(Game game, int node) {
+	private double enemyNodeDistances(Game game, int node) {
 
-		double[] distances = new double[GHOST.values().length];
-		for (int i=0; i<distances.length; i++)
-			distances[i] = MAX_DISTANCE;
+		double tmp;
+		int len = GHOST.values().length;
+		double distances;
+		distances = MAX_DISTANCE;
 
 		for (GHOST ghost : GHOST.values()) {
 			if (!game.isGhostEdible(ghost)) {
@@ -361,7 +364,8 @@ public class CustomFeatureSet extends FeatureSet {
 					if (game.getDistance(myNode, node, DM.PATH) < game.getDistance(myNode, ghostNode, DM.PATH)) {
 
 						MOVE ghostMove = game.getGhostLastMoveMade(ghost);
-						distances[ghost.ordinal()] = game.getDistance(ghostNode, node, ghostMove, DM.PATH);
+						tmp = game.getDistance(ghostNode, node, ghostMove, DM.PATH);
+						if (tmp < distances) distances = tmp;
 					}
 				}
 			}
