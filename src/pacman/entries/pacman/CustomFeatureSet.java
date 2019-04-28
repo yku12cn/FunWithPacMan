@@ -86,13 +86,16 @@ public class CustomFeatureSet extends FeatureSet {
 
 		// Safety of junctions?
 // Basically checks the most safe junction at each depth, and constrains by first junction.
-// Seems like it should be constraining by all the ones before and not just the first... 
+// Seems like it should be constraining by all the ones before and not just the first...
+		// I implemented the comment above
 		double[] safety = new double[DEPTH];
+		double min = Double.POSITIVE_INFINITY;
 		for (int i=0; i<DEPTH; i++) {
 			for (Integer n : junctions.get(i).keySet()) {
 				safety[i] = Math.max(safety[i], junctions.get(i).get(n));
-				safety[i] = Math.min(safety[0], safety[i]);
+				safety[i] = Math.min(min, safety[i]);
 			}
+			min = Math.min(safety[i], min);
 		}
 
 		// Feast opportunity?
