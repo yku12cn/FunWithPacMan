@@ -23,6 +23,7 @@ public class CustomFeatureSet extends FeatureSet {
 	private int FEATURES = 7; // How many (DEPTH + 3)
 	private double MAX_DISTANCE = 200; // Between nodes
 	private double MAX_SCORE = Math.pow(MAX_DISTANCE/4,2); // Of a path
+	private Game game;
 
 	// Computation storage
 // There will be DEPTH hashmaps in this arraylist
@@ -72,6 +73,7 @@ public class CustomFeatureSet extends FeatureSet {
 	/** Extract a feature set for this state-action pair. */
 // So this is similar to the action-dependent features in HFO	
 	public FeatureSet extract(Game game, MOVE move) {
+		this.game = game;
 		CustomFeatureSet features = new CustomFeatureSet();
 		features.setValues(game, move);
 		return features;
@@ -325,8 +327,13 @@ public class CustomFeatureSet extends FeatureSet {
 	/** Compute the score of a ghost path. Closer ghosts mean higher scores. */
 	private double score(double[] path) {
 		double score = 0;
-		for (int i=0; i<path.length; i++)	
-			score += Math.pow((MAX_DISTANCE - path[i])/4, 2);
+		if (game.getNumberOfActivePowerPills() > 0) {
+			for (int i = 0; i < path.length; i++)
+				score += Math.pow((MAX_DISTANCE - path[i]) / 4, 2);
+		} else {
+			for (int i = 0; i < path.length; i++)
+				score += Math.pow(path[i] / 4, 2);
+		}
 		return score / path.length;
 	}
 
