@@ -10,7 +10,10 @@ public class JyNN {
     private float lambda; //l2 regularizer;
     private float step; //Step size;
 
-    /** Init net by size of each layer **/
+    /** Init net by size of each layer
+     * s = step size
+     * l = regularizer (0~1)
+     * specify net structure by size of each layer**/
     public JyNN(float s,float l,int... dd){
         this.lambda = l;
         this.step = s;
