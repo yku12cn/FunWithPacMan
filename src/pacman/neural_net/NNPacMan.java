@@ -1,5 +1,6 @@
 package pacman.neural_net;
 
+import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
@@ -19,10 +20,26 @@ public class NNPacMan {
         rndT[3] = new float [] {rndS[0],rndS[0]+rndS[1],1f - rndS[3],1f};
     }
 
+    /** Encoding the graph **/
     public static Jymax readNode(Game game) {
         Jymax out = new Jymax(1, game.getNumberOfNodes() - 1);
         float[] x = out.getMat()[0];
-
+        //Mark pill
+        for(int i = 0; i <game.getPillIndices().length; i++)
+            x[game.getPillIndices()[i]] = game.isPillStillAvailable(i) ? 1 : 0;
+        //Mark Power pill
+        for(int i = 0; i <game.getPowerPillIndices().length; i++)
+            x[game.getPowerPillIndices()[i]] = game.isPowerPillStillAvailable(i) ? 5 : 0;
+        //Mark Ghosts
+        int i;
+        for(GHOST type : GHOST.values()){  //Mark GHOST
+            i = game.getGhostCurrentNodeIndex(type);
+            if(i >= x.length)
+                continue;
+            x[i] = (game.isGhostEdible(type)&&(x[i]!=-2000)) ? 20 : -2000;
+        }
+        //Mark PacMan
+        x[game.getPacmanCurrentNodeIndex()] = 500;
         return out;
     }
 
@@ -58,7 +75,7 @@ public class NNPacMan {
         MOVE[] rMoves = sortPMoves(game); //Find Sorted possible moves
         //Select random move
         if(rnd){
-            float [] rndP = rndT[rMoves.length];  //Fetch CPD that matches the # of possible moves.
+            float [] rndP = rndT[rMoves.length-1];  //Fetch CPD that matches the # of possible moves.
             float R = (float)Math.random();  //Roll dice
             return rMoves[(R>rndP[0] ? 1 : 0) + (R>rndP[1] ? 1 : 0) + (R>rndP[2] ? 1 : 0)];
         }else{
