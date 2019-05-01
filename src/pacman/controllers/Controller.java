@@ -29,39 +29,7 @@ public abstract class Controller<T> implements Runnable
 		threadStillRunning=false;
 	}
 
-	/**
-	 * Terminates the controller: a signal is sent and the flag 'alive' is set to false. When
-	 * the thread wakes up, the outer loop will terminate and the thread finishes.
-	 */
-	public final void terminate()
-	{
-		alive=false;
-		wasSignalled=true;
 
-		synchronized(this)
-		{
-			notify();
-		}
-	}
-
-	/**
-	 * Updates the game state: a copy of the game is passed to this method and the class variable is
-	 * updated accordingly.
-	 *
-	 * @param game A copy of the current game
-	 * @param timeDue The time the next move is due
-	 */
-	public final void update(Game game,long timeDue)
-	{
-		synchronized(this)
-		{
-			this.game=game;
-			this.timeDue=timeDue;
-			wasSignalled=true;
-			hasComputed=false;
-			notify();
-		}
-	}
 
 	/**
 	 * Retrieves the move from the controller (whatever is stored in the class variable).
@@ -112,17 +80,7 @@ public abstract class Controller<T> implements Runnable
 			}
 		}
 	}
-	
-	/**
-	 * This method is used to check whether the controller computed a move since the last
-	 * update of the game.
-	 * 
-	 * @return Whether or not the controller computed a move since the last update
-	 */
-	public final boolean hasComputed()
-	{
-		return hasComputed;
-	}
+
 
 	/**
 	 * Compute the next move given a copy of the current game and a time the move has to be computed by.

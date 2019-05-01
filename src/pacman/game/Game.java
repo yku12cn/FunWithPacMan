@@ -73,65 +73,8 @@ public final class Game
 	}
 	
 	private Random rnd;
-	private long seed;	
-	
-	/////////////////////////////////////////////////////////////////////////////
-	///////////////////  Constructors and initialisers  /////////////////////////
-	/////////////////////////////////////////////////////////////////////////////
-	
-	/**
-	 * Instantiates a new game. The seed is used to initialise the pseudo-random
-	 * number generator. This way, a game may be replicated exactly by using identical
-	 * seeds. Note: in the competition, the games received from the game server are
-	 * using different seeds. Otherwise global reversal events would be predictable.
-	 *
-	 * @param seed The seed for the pseudo-random number generator
-	 */
-/*	public Game(long seed)
-	{	
-		this(seed, 0);
-	}
-	
-	public Game(long seed, int initialMaze, int speed_reduction, int nGhosts){
-		
-		constants.NUM_GHOSTS = nGhosts;
-		constants.GHOST_SPEED_REDUCTION = speed_reduction;
-		this.seed=seed;
-		rnd=new Random(seed);
-		
-		_init(initialMaze);
-	}
-	
-	public Game(long seed,int initialMaze, int speed_reduction)
-	{						
-		constants.GHOST_SPEED_REDUCTION = speed_reduction;
-		this.seed=seed;
-		rnd=new Random(seed);
-		
-		_init(initialMaze);		
-	}
-*/	
-	
-	/**
-	 * Initiates a new game specifying the maze to start with.
-	 * 
-	 * @param seed Seed used for the pseudo-random numbers
-	 * @param initialMaze The maze to start the game with
-	 */
-/*
-	public Game(long seed,int initialMaze)
-	{			
-		this(seed, initialMaze, new Constants());	
-	}
-	
-	public Game(long seed, int initialMaze, Constants constants){
-		this.seed = seed;
-		rnd = new Random(seed);
-		this.constants = constants;
-		
-		_init(initialMaze);
-	}
-*/	
+	private long seed;
+
 	
 	public Game(Random rGen, Constants constants){
 		rnd = rGen;
@@ -161,11 +104,7 @@ public final class Game
 	 */
 	public Game(){}
 	
-	public Random getRandomGenerator(){
-		return rnd;
-	}
-	
-	
+
 	/**
 	 * _init.
 	 *
@@ -244,90 +183,6 @@ public final class Game
 		}
 	}
 
-	/**
-	 * Gets the game state as a string: all variables are written to a string in a pre-determined
-	 * order. The string may later be used to recreate a game state using the setGameState() method.
-	 *
-	 * @return The game state as a string
-	 */
-	public String getGameState()
-	{
-		StringBuilder sb=new StringBuilder();
-
-		sb.append(mazeIndex+","+totalTime+","+score+","+currentLevelTime+","+levelCount+","
-				+pacman.currentNodeIndex+","+pacman.lastMoveMade+","+pacman.numberOfLivesRemaining+","+pacman.hasReceivedExtraLife+",");
-
-		for(Ghost ghost : ghosts.values())
-			sb.append(ghost.currentNodeIndex+","+ghost.edibleTime+","+ghost.lairTime+","+ghost.lastMoveMade+",");
-
-		for(int i=0;i<currentMaze.pillIndices.length;i++)
-			if(pills.get(i))
-				sb.append("1");
-			else
-				sb.append("0");
-
-		sb.append(",");
-		
-		for(int i=0;i<currentMaze.powerPillIndices.length;i++)
-			if(powerPills.get(i))
-				sb.append("1");
-			else
-				sb.append("0");
-		
-		sb.append(",");
-		
-		sb.append(timeOfLastGlobalReversal);
-		
-		return sb.toString();
-	}
-	
-	/**
-	 * Sets the game state from a string: the inverse of getGameState(). It reconstructs
-	 * all the game's variables from the string.
-	 *
-	 * @param gameState The game state represented as a string
-	 */
-	public void setGameState(String gameState)
-	{	
-		String[] values=gameState.split(",");
-		
-		int index=0;
-		
-		mazeIndex=Integer.parseInt(values[index++]);
-		totalTime=Integer.parseInt(values[index++]);
-		score=Integer.parseInt(values[index++]);
-		currentLevelTime=Integer.parseInt(values[index++]);
-		levelCount=Integer.parseInt(values[index++]);
-		
-		pacman=new PacMan(Integer.parseInt(values[index++]),MOVE.valueOf(values[index++]),
-				Integer.parseInt(values[index++]),Boolean.parseBoolean(values[index++]));
-		
-		ghosts=new EnumMap<GHOST, Ghost>(GHOST.class);
-		
-		for(GHOST ghostType : GHOST.values())
-			ghosts.put(ghostType,new Ghost(Integer.parseInt(values[index++]),Integer.parseInt(values[index++]),
-					Integer.parseInt(values[index++]),MOVE.valueOf(values[index++])));
-			
-		_setPills(currentMaze=mazes[mazeIndex]);
-		
-		for(int i=0;i<values[index].length();i++)
-			if(values[index].charAt(i)=='1')
-				pills.set(i);
-			else
-				pills.clear(i);
-		
-		index++;
-		
-		for(int i=0;i<values[index].length();i++)
-			if(values[index].charAt(i)=='1')
-				powerPills.set(i);		
-			else
-				powerPills.clear(i);
-		
-		index++;
-		
-		timeOfLastGlobalReversal=Integer.parseInt(values[index]);
-	}
 	
 	/**
 	 * Returns an exact copy of the game. This may be used for forward searches
@@ -425,28 +280,7 @@ public final class Game
 		
 		_checkLevelState();							//check if level/game is over
 	}
-	
-	/**
-	 * This method is for specific purposes such as searching a tree in a specific manner. It has to be used cautiously as it might
-	 * create an unstable game state and may cause the game to crash.
-	 * 
-	 * @param feast Whether or not to enable feasting
-	 * @param updateLairTimes Whether or not to update the lair times
-	 * @param updateExtraLife Whether or not to update the extra life
-	 * @param updateTotalTime Whether or not to update the total time
-	 * @param updateLevelTime Whether or not to update the level time
-	 */
-	public void updateGame(boolean feast,boolean updateLairTimes,boolean updateExtraLife,boolean updateTotalTime,boolean updateLevelTime)
-	{
-		if(feast) 			_feast();				//ghosts eat pac-man or vice versa		
-		if(updateLairTimes) _updateLairTimes();
-		if(updateExtraLife) _updatePacManExtraLife();
 
-		if(updateTotalTime) totalTime++;
-		if(updateLevelTime) currentLevelTime++;
-		
-		_checkLevelState();							//check if level/game is over
-	}
 	
 	/**
 	 * _update lair times.
@@ -691,15 +525,6 @@ public final class Game
 	///////////////////  Query Methods (return only)  ///////////////////////////
 	/////////////////////////////////////////////////////////////////////////////
 
-	/**
-	 * Returns the time when the last global reversal event took place.
-	 * 
-	 * @return time the last global reversal event took place (not including power pill reversals)
-	 */
-	public int getTimeOfLastGlobalReversal()
-	{
-		return timeOfLastGlobalReversal;
-	}
 	
 	/**
 	 * Checks whether the game is over or not: all lives are lost or 16 levels have been 
@@ -754,15 +579,7 @@ public final class Game
 		return currentMaze.graph[nodeIndex].y;
 	}
 	
-	/**
-	 * Gets the index of the current maze.
-	 *
-	 * @return The maze index
-	 */
-	public int getMazeIndex()
-	{
-		return mazeIndex;
-	}
+
 	
 	/**
 	 * Returns the current level.
@@ -774,25 +591,7 @@ public final class Game
 		return levelCount;
 	}
 	
-	/**
-	 * Returns the number of nodes in the current maze.
-	 * 
-	 * @return number of nodes in the current maze.
-	 */
-	public int getNumberOfNodes()
-	{
-		return currentMaze.graph.length;
-	}
-	 
-	/**
-	 * Returns the current value awarded for eating a ghost.
-	 * 
-	 * @return the current value awarded for eating a ghost.
-	 */
-	public int getGhostCurrentEdibleScore()
-	{
-		return constants.GHOST_EAT_SCORE*ghostEatMultiplier;
-	}
+
 	 
 	/**
 	 * Returns the node index where ghosts start in the maze once leaving
@@ -850,16 +649,7 @@ public final class Game
 	{
 		return currentMaze.graph[nodeIndex].powerPillIndex;		
 	}
-	
-	/**
-	 * Returns the array of node indices that are junctions (3 or more neighbours).
-	 * 
-	 * @return the junction indices
-	 */
-	public int[] getJunctionIndices()
-	{
-		return currentMaze.junctionIndices;		
-	}
+
 	
 	/**
 	 * Returns the indices to all the nodes that have pills.
@@ -984,27 +774,9 @@ public final class Game
 	{
 		return totalTime;
 	}
-	
-	/**
-	 * Total number of pills in the mazes[gs.curMaze]
-	 *
-	 * @return the number of pills
-	 */
-	public int getNumberOfPills()
-	{
-		return currentMaze.pillIndices.length;
-	}
-	
-	/**
-	 * Total number of power pills in the mazes[gs.curMaze]
-	 *
-	 * @return the number of power pills
-	 */
-	public int getNumberOfPowerPills()
-	{
-		return currentMaze.powerPillIndices.length;
-	}
-	
+
+
+
 	/**
 	 * Total number of pills in the mazes[gs.curMaze]
 	 *
@@ -1014,7 +786,7 @@ public final class Game
 	{
 		return pills.cardinality();
 	}
-	
+
 	/**
 	 * Total number of power pills in the mazes[gs.curMaze]
 	 *
@@ -1122,30 +894,7 @@ public final class Game
 	{
 		return currentMaze.graph[nodeIndex].allPossibleMoves.get(lastModeMade);
 	}
-	
-	/**
-	 * Gets the neighbouring nodes from the current node index.
-	 *
-	 * @param nodeIndex The current node index
-	 * @return The set of neighbouring nodes
-	 */
-	public int[] getNeighbouringNodes(int nodeIndex)
-	{
-		return currentMaze.graph[nodeIndex].allNeighbouringNodes.get(MOVE.NEUTRAL);
-	}
-	
-	/**
-	 * Gets the neighbouring nodes from the current node index excluding the node 
-	 * that corresponds to the opposite of the last move made which is given as an argument.
-	 *
-	 * @param nodeIndex The current node index
-	 * @param lastModeMade The last mode made
-	 * @return The set of neighbouring nodes except the one that is opposite of the last move made
-	 */
-	public int[] getNeighbouringNodes(int nodeIndex,MOVE lastModeMade)
-	{
-		return currentMaze.graph[nodeIndex].allNeighbouringNodes.get(lastModeMade);
-	}
+
 	
    /**
     * Given a node index and a move to be made, it returns the node index the move takes one to.
@@ -1161,17 +910,7 @@ public final class Game
     	
     	return neighbour==null ? -1 : neighbour;
     }
-    
-	/**
-	 * A method to enable or disable global reversals. This is set only at the very beginning of the game and does not
-	 * reset when a new level is encountered - use with care.
-	 * 
-	 * @param value Whether to allow for global reversals to take place.
-	 */
-	public void setGlobalReversals(boolean value)
-	{
-		this.enableGlobalReversals=value;
-	}
+
 	
 	/**
 	 * Method that returns the direction to take given a node index and an index of a neighbouring
@@ -1280,120 +1019,7 @@ public final class Game
 		
 		return -1;
 	}
-	
-	/**
-	 * Gets the closest node index from node index.
-	 *
-	 * @param fromNodeIndex the from node index
-	 * @param targetNodeIndices the target node indices
-	 * @param distanceMeasure the distance measure
-	 * @return the closest node index from node index
-	 */
-	public int getClosestNodeIndexFromNodeIndex(int fromNodeIndex,int[] targetNodeIndices,DM distanceMeasure)
-	{
-		double minDistance=Integer.MAX_VALUE;
-		int target=-1;
-		
-		for(int i=0;i<targetNodeIndices.length;i++)
-		{				
-			double distance=0;
-			
-			distance=getDistance(targetNodeIndices[i],fromNodeIndex,distanceMeasure);
-					
-			if(distance<minDistance)
-			{
-				minDistance=distance;
-				target=targetNodeIndices[i];	
-			}
-		}
-		
-		return target;
-	}
 
-	/**
-	 * Gets the farthest node index from node index.
-	 *
-	 * @param fromNodeIndex the from node index
-	 * @param targetNodeIndices the target node indices
-	 * @param distanceMeasure the distance measure
-	 * @return the farthest node index from node index
-	 */
-	public int getFarthestNodeIndexFromNodeIndex(int fromNodeIndex,int[] targetNodeIndices,DM distanceMeasure)
-	{
-		double maxDistance=Integer.MIN_VALUE;
-		int target=-1;
-		
-		for(int i=0;i<targetNodeIndices.length;i++)
-		{				
-			double distance=0;
-			
-			distance=getDistance(targetNodeIndices[i],fromNodeIndex,distanceMeasure);
-					
-			if(distance>maxDistance)
-			{
-				maxDistance=distance;
-				target=targetNodeIndices[i];	
-			}
-		}
-		
-		return target;
-	}
-
-	/**
-	 * Gets the next move towards target.
-	 *
-	 * @param fromNodeIndex the from node index
-	 * @param toNodeIndex the to node index
-	 * @param distanceMeasure the distance measure
-	 * @return the next move towards target
-	 */
-	public MOVE getNextMoveTowardsTarget(int fromNodeIndex,int toNodeIndex,DM distanceMeasure)
-	{
-		MOVE move=null;
-
-		double minDistance=Integer.MAX_VALUE;
-
-		for(Entry<MOVE,Integer> entry : currentMaze.graph[fromNodeIndex].neighbourhood.entrySet())
-		{
-			double distance=getDistance(entry.getValue(),toNodeIndex,distanceMeasure);
-								
-			if(distance<minDistance)
-			{
-				minDistance=distance;
-				move=entry.getKey();	
-			}
-		}
-		
-		return move;
-	}
-	
-	/**
-	 * Gets the next move away from target.
-	 *
-	 * @param fromNodeIndex the from node index
-	 * @param toNodeIndex the to node index
-	 * @param distanceMeasure the distance measure
-	 * @return the next move away from target
-	 */
-	public MOVE getNextMoveAwayFromTarget(int fromNodeIndex,int toNodeIndex,DM distanceMeasure)
-	{
-		MOVE move=null;
-
-		double maxDistance=Integer.MIN_VALUE;
-
-		for(Entry<MOVE,Integer> entry : currentMaze.graph[fromNodeIndex].neighbourhood.entrySet())
-		{
-			double distance=getDistance(entry.getValue(),toNodeIndex,distanceMeasure);
-								
-			if(distance>maxDistance)
-			{
-				maxDistance=distance;
-				move=entry.getKey();	
-			}
-		}
-		
-		return move;
-	}
 	
 	/**
 	 * Gets the approximate next move towards target not considering directions opposing the last move made.
@@ -1452,107 +1078,7 @@ public final class Game
 		
 		return move;
 	}
-	
-	/**
-	 * Gets the exact next move towards target taking into account reversals. This uses the pre-computed paths.
-	 *
-	 * @param fromNodeIndex The node index from which to move (i.e., current position)
-	 * @param toNodeIndex The target node index
-	 * @param lastMoveMade The last move made
-	 * @param distanceMeasure the distance measure to be used
-	 * @return the next move towards target
-	 */
-	public MOVE getNextMoveTowardsTarget(int fromNodeIndex,int toNodeIndex,MOVE lastMoveMade, DM distanceMeasure)
-	{
-		MOVE move=null;
 
-		double minDistance=Integer.MAX_VALUE;
-
-		for(Entry<MOVE,Integer> entry : currentMaze.graph[fromNodeIndex].allNeighbourhoods.get(lastMoveMade).entrySet())
-		{
-			double distance=getDistance(entry.getValue(),toNodeIndex,lastMoveMade,distanceMeasure);
-								
-			if(distance<minDistance)
-			{
-				minDistance=distance;
-				move=entry.getKey();	
-			}
-		}
-		
-		return move;
-	}
-	
-	/**
-	 * Gets the exact next move away from target taking into account reversals. This uses the pre-computed paths.
-	 *
-	 * @param fromNodeIndex The node index from which to move (i.e., current position)
-	 * @param toNodeIndex The target node index
-	 * @param lastMoveMade The last move made
-	 * @param distanceMeasure the distance measure to be used
-	 * @return the next move away from target
-	 */
-	public MOVE getNextMoveAwayFromTarget(int fromNodeIndex,int toNodeIndex,MOVE lastMoveMade, DM distanceMeasure)
-	{
-		MOVE move=null;
-
-		double maxDistance=Integer.MIN_VALUE;
-
-		for(Entry<MOVE,Integer> entry : currentMaze.graph[fromNodeIndex].allNeighbourhoods.get(lastMoveMade).entrySet())
-		{
-			double distance=getDistance(entry.getValue(),toNodeIndex,lastMoveMade,distanceMeasure);
-								
-			if(distance>maxDistance)
-			{
-				maxDistance=distance;
-				move=entry.getKey();	
-			}
-		}
-		
-		return move;
-	}
-
-	/**
-	 * Gets the A* path considering previous moves made (i.e., opposing actions are ignored)
-	 *
-	 * @param fromNodeIndex The node index from which to move (i.e., current position)
-	 * @param toNodeIndex The target node index
-	 * @param lastMoveMade The last move made
-	 * @return The A* path
-	 */
-	public int[] getAStarPath(int fromNodeIndex,int toNodeIndex,MOVE lastMoveMade)
-	{
-		return getApproximateShortestPath(fromNodeIndex,toNodeIndex,lastMoveMade);
-	}
-	
-	/**
-	 * Gets the shortest path from node A to node B as specified by their indices.
-	 *
-	 * @param fromNodeIndex The node index from where to start (i.e., current position)
-	 * @param toNodeIndex The target node index
-	 * @return the shortest path from start to target
-	 */
-	public int[] getShortestPath(int fromNodeIndex,int toNodeIndex)
-	{
-		return caches[mazeIndex].getPathFromA2B(fromNodeIndex,toNodeIndex);
-	}
-	
-	/**
-	 * Gets the approximate shortest path taking into account the last move made (i.e., no reversals).
-	 * This is approximate only as the path is computed greedily. A more accurate path can be obtained
-	 * using A* which is slightly more costly.
-	 *
-	 * @param fromNodeIndex The node index from where to start (i.e., current position)
-	 * @param toNodeIndex The target node index
-	 * @param lastMoveMade The last move made
-	 * @return the shortest path from start to target
-	 */
-	public int[] getApproximateShortestPath(int fromNodeIndex,int toNodeIndex,MOVE lastMoveMade)
-	{
-		if(currentMaze.graph[fromNodeIndex].neighbourhood.size()==0)//lair
-			return new int[0];
-
-		return caches[mazeIndex].getPathFromA2B(fromNodeIndex,toNodeIndex,lastMoveMade);
-	}
 	
 	/**
 	 * Similar to getApproximateShortestPath) but returns the distance of the path only. It is slightly

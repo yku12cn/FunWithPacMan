@@ -54,18 +54,7 @@ public class DataFile {
 	    }
 	}
 	
-	/** Check if this file has more lines. */
-	public boolean hasNextLine() {
-		try {
-			if (reader == null)
-				reader = new Scanner(file);
-		} catch (Exception e) {
-        	System.out.println("ERROR: could not read from "+filename);
-			System.exit(0);
-        }
-		
-		return reader.hasNextLine();
-	}
+
 	
 	/** Get a line from this file. */
 	public String nextLine() {

@@ -39,13 +39,6 @@ public class QFunction {
 		return sum;
 	}
 
-	/** Gradient-descent weight update - without eligibility traces. */
-	public void updateWeights(double update, FeatureSet features) {
-		for (int i=0; i<weights.length; i++)
-			weights[i] += (update * features.get(i));
-		bias += update;
-	}
-	
 	/** Gradient-descent weight update - with eligibility traces. */
 	public void updateWeights(double update) {
 		for (int i=0; i<weights.length; i++)
@@ -80,12 +73,8 @@ public class QFunction {
 		file.clear();
 		file.append(bias+"\n");
 		
-		int padding = 0;		
-		// We have reduced depth for this one? So pad it
-		// TODO: SANMIT -- HARDCODED HACK!!
-		padding = 7 - weights.length;
+		int padding = 7 - weights.length;;
 
-		
 		for (int w = 0; w < weights.length; w++){			
 			if (4 - padding == w){
 				for (int p = 0; p < padding;  p++){
@@ -95,22 +84,7 @@ public class QFunction {
 			file.append(weights[w]+"\n");
 		}
 		file.close();
-		//System.out.println("Weights: " + weights.length);
+
 	}
-	
-	public double euclideanDistanceTo(QFunction qfunc){
-		
-		double distance = 0;
-/*
-		distance = (this.bias / qfunc.bias);
-		if (distance > 1)
-			distance = 1 / distance;
-*/		
-		distance += Math.pow(this.bias - qfunc.bias, 2);
-		for (int i = 0; i < this.weights.length; i++){
-			distance += Math.pow(this.weights[i] - qfunc.weights[i], 2);
-		}
-		return Math.sqrt(distance);
-	}
-	
+
 }

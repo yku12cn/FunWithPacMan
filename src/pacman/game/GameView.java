@@ -57,49 +57,7 @@ public final class GameView extends JComponent
     ////// Visual aids for debugging ///////
     ////////////////////////////////////////
 
-    /**
-     * Adds a node to be highlighted using the color specified
-     *
-     * @param game Copy of the current game
-     * @param color Colour to be used
-     * @param nodeIndices The node indices to be highlighted by the chosen colour
-     */
-    public synchronized static void addPoints(Game game,Color color,int... nodeIndices)
-    {
-    	if(isVisible)
-    		for(int i=0;i<nodeIndices.length;i++)
-    			debugPointers.add(new DebugPointer(game.getNodeXCood(nodeIndices[i]),game.getNodeYCood(nodeIndices[i]),color));    	
-    }
-    
-    /**
-     * Adds a set of lines to be drawn using the color specified (fromNnodeIndices.length must be equals toNodeIndices.length)
-     *
-     * @param game Copy of the current game
-     * @param color Colour to be used
-     * @param fromNnodeIndices The node indices where the lines start
-     * @param toNodeIndices The node indices where the lines end
-     */
-    public synchronized static void addLines(Game game,Color color,int[] fromNnodeIndices,int[] toNodeIndices)
-    {
-    	if(isVisible)
-    		for(int i=0;i<fromNnodeIndices.length;i++)
-    			debugLines.add(new DebugLine(game.getNodeXCood(fromNnodeIndices[i]),game.getNodeYCood(fromNnodeIndices[i]),game.getNodeXCood(toNodeIndices[i]),game.getNodeYCood(toNodeIndices[i]),color));    	
-    }
-    
-    /**
-     * Adds a line to be drawn using the color specified
-     *
-     * @param game the game
-     * @param color the color
-     * @param fromNnodeIndex the from nnode index
-     * @param toNodeIndex the to node index
-     */
-    public synchronized static void addLines(Game game,Color color,int fromNnodeIndex,int toNodeIndex)
-    {
-    	if(isVisible)
-    		debugLines.add(new DebugLine(game.getNodeXCood(fromNnodeIndex),game.getNodeYCood(fromNnodeIndex),game.getNodeXCood(toNodeIndex),game.getNodeYCood(toNodeIndex),color));    	
-    }
-        
+
     /**
      * Draw the debug info and the clear it - it is shown for a single time step only.
      */
@@ -154,10 +112,7 @@ public final class GameView extends JComponent
         
         g.drawImage(offscreen,0,0,this);
     }
-    
-    public Image getImage(){
-    	return offscreen;
-    }
+
     
     /**
      * Draw maze.

@@ -332,9 +332,9 @@ public class CustomFeatureSet extends FeatureSet {
             for (int i = 0; i < path.length; i++)
                 score += Math.pow((MAX_DISTANCE-path[i]) / 4, 2);
         //}
-        //else {
+       //else {
         //    for (int i = 0; i < path.length; i++)
-        //        score += Math.pow((path[i]) / 4, 2);
+          //      score += Math.pow((path[i]) / 4, 2);
         //}
 		return score / path.length;
 	}
