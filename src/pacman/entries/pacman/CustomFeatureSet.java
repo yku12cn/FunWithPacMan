@@ -116,9 +116,6 @@ public class CustomFeatureSet extends FeatureSet {
 		return path;
 
 	}
-
-	/** Search up to a few junctions ahead in this direction. */
-//	Searches up to DEPTH junctions, calculates the safety of that node, and populates it into junctions
 	private void exploreJunctions(int node, MOVE move, int depth, double distance) {
 
 		if (depth >= DEPTH) return;
@@ -129,30 +126,22 @@ public class CustomFeatureSet extends FeatureSet {
 			node = GAME.getNeighbour(node, move);
 			distance++;
 
-// Basically nothing gets populated if there is a ghost on the next node			
-			// Stop for an approaching enemy
 			for (GHOST ghost : GHOST.values()) {
 				if (GAME.getGhostCurrentNodeIndex(ghost) == node && move != GAME.getGhostLastMoveMade(ghost) && !GAME.isGhostEdible(ghost))
 					return;
 			}
 
-			// Notice a power pill
-// This part updates powerDepth			
 			int powerIndex = GAME.getPowerPillIndex(node);
 			if (powerIndex > -1 && GAME.isPowerPillStillAvailable(powerIndex)) {
-
 				double safety = safety(node, distance);
 				if (safety <= 0) return;
-
 				powerInSegment = true;
 				if (depth < powerDepth) powerDepth = depth;
 			}
 
-			// Notice a regular pill (maybe)
 			int pillIndex = GAME.getPillIndex(node);
 			if (pillIndex > -1 && GAME.isPillStillAvailable(pillIndex)) pillInSegment = true;
 
-			// Notice a junction
 			if (GAME.isJunction(node)) {
 				
 				double safety = safety(node, distance);
@@ -160,13 +149,11 @@ public class CustomFeatureSet extends FeatureSet {
 
 				if (!junctions.get(depth).containsKey(node) || junctions.get(depth).get(node) < safety)
 					junctions.get(depth).put(node, safety);
-
-				// Really notice a regular pill (only in segments without power and with safe exits)
-				if (!powerInSegment && pillInSegment && depth < pillDepth)
+				else if (!powerInSegment && pillInSegment && depth < pillDepth)
 					pillDepth = depth;
+
 			}
 
-			// Split at a junction
 			if (GAME.isJunction(node)) {
 
 				MOVE[] possibleMoves = GAME.getPossibleMoves(node, move);
@@ -178,26 +165,20 @@ public class CustomFeatureSet extends FeatureSet {
 		}
 	}
 
-	/** Find the highest-scoring path (ghost : depth) towards enemies in this direction. */
 	private double[] exploreEnemies(int node, MOVE move, int depth, double distance, double[] path) {
 
 		if (depth >= DEPTH-1) return path;
 
-		// Step
 		while (true) {
 			node = GAME.getNeighbour(node, move);
 			distance++;
 
-			// Notice an approaching enemy
 			for (GHOST ghost : GHOST.values()) {
-				if (GAME.getGhostCurrentNodeIndex(ghost) == node)
-					if (move != GAME.getGhostLastMoveMade(ghost))
-						if (!GAME.isGhostEdible(ghost))
-							if (distance < path[ghost.ordinal()])
-								path[ghost.ordinal()] = distance;
+				if (GAME.getGhostCurrentNodeIndex(ghost) == node && move != GAME.getGhostLastMoveMade(ghost))
+					if (!GAME.isGhostEdible(ghost) && distance < path[ghost.ordinal()])
+						path[ghost.ordinal()] = distance;
 			}
 
-			// Split at a junction
 			if (GAME.isJunction(node)) {
 
 				double[] bestPath = path;
@@ -206,8 +187,7 @@ public class CustomFeatureSet extends FeatureSet {
 				MOVE[] possibleMoves = GAME.getPossibleMoves(node, move);
 				for (MOVE possibleMove : possibleMoves) {
 
-					double[] pathCopy = Arrays.copyOf(path, path.length);
-					double[] newPath = exploreEnemies(node, possibleMove, depth+1, distance, pathCopy);
+					double[] newPath = exploreEnemies(node, possibleMove, depth+1, distance, Arrays.copyOf(path, path.length));
                     double newScore = score(newPath);
 
 					if (newScore > bestScore) {
@@ -219,25 +199,19 @@ public class CustomFeatureSet extends FeatureSet {
 				return bestPath;
 			}
 
-			// Turn at a corner
 			else if (GAME.getNeighbour(node, move) == -1)
 				move = GAME.getPossibleMoves(node, move)[0];
 		}
 	}
 
-	/** Find the path with shortest distances towards feasts in this direction. */
-// Path contains for each ghost, the minimum distance of a safe node	
 	private double[] exploreFeasts(int node, MOVE move, int depth, double distance, double[] path) {
 
-		if (depth >= DEPTH+1)
-			return path;
+		if (depth >= DEPTH+1) return path;
 
-		// Step
 		while (true) {
 			node = GAME.getNeighbour(node, move);
 			distance++;
 
-			// Stop for a power pill
 			int powerIndex = GAME.getPowerPillIndex(node);
 			if (powerIndex > -1 && GAME.isPowerPillStillAvailable(powerIndex))
 				return path;
@@ -245,31 +219,21 @@ public class CustomFeatureSet extends FeatureSet {
 			for (GHOST ghost : GHOST.values()) {
 				if (GAME.getGhostCurrentNodeIndex(ghost) == node) {
 
-					// Stop for an approaching enemy
 					if (!GAME.isGhostEdible(ghost)) {
 						if (move != GAME.getGhostLastMoveMade(ghost))
 							return path;
-					}
-
-					else {
-						
-						// Stop for an unsafe feast
-						double safety = safety(node, distance);
-						if (safety <= 0)
+					} else {
+						if (safety(node, distance) <= 0)
 							return path;
-
-						// Otherwise notice it
-						if (distance < path[ghost.ordinal()])
+						else if (distance < path[ghost.ordinal()])
 							path[ghost.ordinal()] = distance;
 					}
 				}
 			}
 
-			// Split at a junction
 			if (GAME.isJunction(node)) {
 
 				double[] bestPath = path;
-				//double bestScore = score(path);
                 double bestScore = score(path);
 
 				MOVE[] possibleMoves = GAME.getPossibleMoves(node, move);
@@ -277,7 +241,6 @@ public class CustomFeatureSet extends FeatureSet {
 
 					double[] pathCopy = Arrays.copyOf(path, path.length);
 					double[] newPath = exploreFeasts(node, possibleMove, depth+1, distance, pathCopy);
-					//double newScore = score(newPath);
                     double newScore = score(newPath);
 
 					if (newScore > bestScore) {
@@ -289,12 +252,10 @@ public class CustomFeatureSet extends FeatureSet {
 				return bestPath;
 			}
 
-			// Turn at a corner
 			else if (GAME.getNeighbour(node, move) == -1)
 				move = GAME.getPossibleMoves(node, move)[0];
 		}
 	}
-
 
 	private double score(double[] path) {
 		double score = 0;
@@ -309,6 +270,14 @@ public class CustomFeatureSet extends FeatureSet {
 		}
 
 		return score / path.length;
+	}
+
+	public boolean hasPowerPillAvailable() {
+
+		int [] indexs = GAME.getPowerPillIndices();
+		if (indexs.length==0) return false;
+		return true;
+
 	}
 
 	private double safety(Integer node, double myDistance) {
@@ -334,7 +303,6 @@ public class CustomFeatureSet extends FeatureSet {
 				if (ghostNode != GAME.getCurrentMaze().lairNodeIndex) {
 					int myNode = GAME.getPacmanCurrentNodeIndex();
 					if (GAME.getDistance(myNode, node, DM.PATH) < GAME.getDistance(myNode, ghostNode, DM.PATH)) {
-
 						MOVE ghostMove = GAME.getGhostLastMoveMade(ghost);
 						tmp = GAME.getDistance(ghostNode, node, ghostMove, DM.PATH);
 						if (tmp < distances) distances = tmp;
@@ -346,12 +314,4 @@ public class CustomFeatureSet extends FeatureSet {
 		return distances;
 
 	}
-
-	public boolean hasPowerPillAvailable() {
-
-        int [] indexs = GAME.getPowerPillIndices();
-        if (indexs.length==0) return false;
-        return true;
-
-    }
 }
