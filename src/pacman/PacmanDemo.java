@@ -29,7 +29,7 @@ public class PacmanDemo {
     }
 
     /** Human controller demo **/
-    public static void human(){
+    public static void humanDemo(){
         HumanController human = new HumanController(new KeyBoardInput());
         init();
         defaultC.DELAY = defaultC.DELAY*10;
@@ -53,8 +53,6 @@ public class PacmanDemo {
 
         init();
         defaultC.DELAY = defaultC.DELAY*5;
-        boolean watchAtEnd = true;
-        boolean watchDuring = false;
 
         FeatureSet feature;
         if (Choice.startsWith("custom")) {
@@ -84,10 +82,23 @@ public class PacmanDemo {
             double [] eval_result2 =evaluate(pacman, test_time) ;
             double score = eval_result2[0];		// average score over test number of games
             System.out.println("episode: " + num + "   score: " + score);
-            if (watchDuring) watch(pacman,true);
+
 
         }
-        if (watchAtEnd) watch(pacman, false);
+        // vision of the game
+        Game game=new Game(random.nextLong(), defaultC);
+        pacman.initialize(game, true);
+        GameView gv=new GameView(game).showGame();
+        while(!game.gameOver()) {
+            game.advanceGame(pacman.getMove(game.copy(), -1), getGhostMove(game));
+            pacman.prepare(game);
+            try{
+                Thread.sleep(defaultC.DELAY);
+            }catch(Exception e){
+
+            }
+            gv.repaint();
+        }
         System.out.println("Training Done.");
     }
 
@@ -125,28 +136,7 @@ public class PacmanDemo {
         return performance;
     }
 
-    /** watch the learner play a game. */
-    public static void watch(QPacMan pacman, boolean hide) {
-        Game game=new Game(random.nextLong(), defaultC);
-        pacman.initialize(game, true);
-        GameView gv=new GameView(game).showGame();
-        while(!game.gameOver()) {
-            game.advanceGame(pacman.getMove(game.copy(), -1), getGhostMove(game));
-            pacman.prepare(game);
-            try{
-                Thread.sleep(defaultC.DELAY);
-            }catch(Exception e){
 
-            }
-            gv.repaint();
-        }
-
-        if (hide){
-            gv.setVisible(false);
-            gv.setEnabled(false);
-            gv.getFrame().dispose();
-        }
-    }
     public static String Choice = "customS";
     public static int train_time = 400;
     public static int test_time = 1; // test episodes

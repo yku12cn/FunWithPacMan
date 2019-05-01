@@ -65,10 +65,5 @@ public abstract class Controller<T> implements Runnable
 		}
 	}
 
-
-	/**
-	 * Compute the next move given a copy of the current game
-     * and a time the move has to be computed by.
-	 */
 	public abstract T getMove(Game game,long timeDue);
 }
