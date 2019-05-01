@@ -78,19 +78,16 @@ public class CustomFeatureSet extends FeatureSet {
 			min = Math.min(safety[i], min);
 		}
 
-		// Feast opportunity?
-		double[] startPath = {MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE};
+		double[] startPath = initPath();
 		double[] feastPath = exploreFeasts(game, node, move, 0, 0, startPath);
-		//double feastScore = score(feastPath);
         double feastScore = score(feastPath,game);
 
 		// Upcoming feast opportunity?
 		double futureFeastScore = 0;
 		MOVE[] possibleMoves = game.getPossibleMoves(node);
 		for (MOVE possibleMove : possibleMoves) {
-			double[] initialPath = {MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE, MAX_DISTANCE};
+			double[] initialPath = initPath();
 			double[] path = exploreEnemies(game, node, possibleMove, 0, 0, initialPath);
-			//futureFeastScore = Math.max(futureFeastScore, score(path));
             futureFeastScore = Math.max(futureFeastScore, score(path,game));
 		}
 
@@ -101,15 +98,21 @@ public class CustomFeatureSet extends FeatureSet {
 		values[v++] = (DEPTH - pillDepth) / DEPTH; // How close a pill is
 		values[v++] = feastScore / MAX_SCORE; // How good feasts look
 		values[v++] = futureFeastScore / MAX_SCORE / (powerDepth+1); // How good future feasts look
-	
-		// New features
-		//values[v++] = (game.getTotalTime()  * 1.0) / Constants.LEVEL_LIMIT;
-		
 		
 		if (v != values.length) {
 			System.out.println("Feature vector length error: said "+values.length+", got "+v);
 			System.exit(0);
 		}
+	}
+
+	private double[] initPath() {
+
+		double[] path = new double[DEPTH];
+		for (int i = 0; i < DEPTH; i++) {
+			path[0] = MAX_DISTANCE;
+		}
+		return path;
+
 	}
 
 	/** Search up to a few junctions ahead in this direction. */
@@ -364,9 +367,11 @@ public class CustomFeatureSet extends FeatureSet {
 		}
 
 		return distances;
+
 	}
 
 	public boolean hasPowerPillAvailable(Game game) {
+
         int [] indexs = game.getPowerPillIndices();
         if (indexs.length==0) return false;
         return true;
