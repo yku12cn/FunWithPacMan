@@ -68,7 +68,7 @@ public class NNPacMan {
      * Sorting possible moves base on their score
      * Use Brain before using this!
      **/
-    private MOVE[] sortPMoves(Game game, float [] sList) {
+    private static MOVE[] sortPMoves(Game game, float [] sList) {
         MOVE[] pMoves = game.getPossibleMoves(game.getPacmanCurrentNodeIndex()); //Get possible moves
         // Sort possible moves base on score
         MOVE swap;
@@ -93,6 +93,22 @@ public class NNPacMan {
     public MOVE getMove(Game game, boolean rnd) {
         brain.forward(readNode(game)); //Analyze game
         MOVE[] rMoves = sortPMoves(game, brain.X[brain.layer - 1].getMat()[0]); //Find Sorted possible moves
+        //Select random move
+        if(rnd){
+            float [] rndP = rndT[rMoves.length-1];  //Fetch CPD that matches the # of possible moves.
+            float R = (float)Math.random();  //Roll dice
+            return rMoves[(R>rndP[0] ? 1 : 0) + (R>rndP[1] ? 1 : 0) + (R>rndP[2] ? 1 : 0)];
+        }else{
+            return rMoves[0]; //return best choice
+        }
+    }
+
+    /**
+     * return Pacman move base on current game, using given score vector
+     * rnd for setting whether using random strategy
+     **/
+    public MOVE getMove(Game game, Jymax out, boolean rnd) {
+        MOVE[] rMoves = sortPMoves(game, out.getMat()[0]); //Find Sorted possible moves
         //Select random move
         if(rnd){
             float [] rndP = rndT[rMoves.length-1];  //Fetch CPD that matches the # of possible moves.
@@ -172,17 +188,39 @@ public class NNPacMan {
 
     /** Reference strategy Player **/
     public MOVE TgetMove(Game game, int depth){
-        Jymax A = strategist(game, depth);
-        System.out.println(A);
-        return sortPMoves(game,A.getMat()[0])[0];
+        return sortPMoves(game,strategist(game, depth).getMat()[0])[0];
+//        Jymax A = strategist(game, depth);
+//        System.out.println(A);
+//        return sortPMoves(game,A.getMat()[0])[0];
     }
-//    public void episode(Game game){
-//        while(!game.gameOver()) {
-//            game.advanceGame(pacman.getMove(game.copy(), -1), getGhostMove(game, game.constants.GHOST_TYPE));
-//            pacman.processStep(game);
-//        }
-//    }
-//
+
+    /** Train a round **/
+    public void episode(Game game){
+        Jymax label;
+        Jymax prediction = new Jymax(1,4); //Set container for prediction;
+        while(!game.gameOver()) {
+            label = strategist(game,20); //Get precise evaluation
+            brain.forward(readNode(game)); //Let brain think
+            prediction.set(brain.X[brain.layer - 1]); //Update prediction result;
+            brain.backUpdate(label); //Train brain
+//            game.advanceGame(getMove(game,prediction,true), //Let brain play
+//                    GhostMove(game, game.constants.GHOST_TYPE));
+            game.advanceGame(getMove(game,label,false), //Let teacher play
+                    GhostMove(game, game.constants.GHOST_TYPE));
+        }
+    }
+
+    public void train(Game game, int count){
+        float percent;
+        for(int i=0; i<count; i++){
+            episode(game.copy());
+            percent = ((float)i)/((float)count)*100;
+            if(percent % 1 == 0){
+                System.out.println(percent+" %");
+            }
+        }
+    }
+
 
     /** Helper function to get ghosts action **/
     private static EnumMap<GHOST, MOVE> GhostMove(Game game, int ghostType){
