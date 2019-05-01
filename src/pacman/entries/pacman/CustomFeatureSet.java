@@ -84,7 +84,6 @@ public class CustomFeatureSet extends FeatureSet {
 		double[] feastPath = exploreFeasts(node, move, 0, 0, startPath);
         double feastScore = score(feastPath);
 
-		// Upcoming feast opportunity?
 		double futureFeastScore = 0;
 		MOVE[] possibleMoves = GAME.getPossibleMoves(node);
 		for (MOVE possibleMove : possibleMoves) {
@@ -93,7 +92,6 @@ public class CustomFeatureSet extends FeatureSet {
             futureFeastScore = Math.max(futureFeastScore, score(path));
 		}
 
-		// Features
 		int v = 0;
 		for (int i=0; i<DEPTH; i++)
 			values[v++] = safety[i] / MAX_DISTANCE; // How safe junctions are
@@ -116,6 +114,10 @@ public class CustomFeatureSet extends FeatureSet {
 		return path;
 
 	}
+<<<<<<< HEAD
+
+=======
+>>>>>>> 63ac63cd32be23a635bea4cf4dfe16cb1bd94cea
 	private void exploreJunctions(int node, MOVE move, int depth, double distance) {
 
 		if (depth >= DEPTH) return;
@@ -149,7 +151,12 @@ public class CustomFeatureSet extends FeatureSet {
 
 				if (!junctions.get(depth).containsKey(node) || junctions.get(depth).get(node) < safety)
 					junctions.get(depth).put(node, safety);
+<<<<<<< HEAD
+
+				if (!powerInSegment && pillInSegment && depth < pillDepth)
+=======
 				else if (!powerInSegment && pillInSegment && depth < pillDepth)
+>>>>>>> 63ac63cd32be23a635bea4cf4dfe16cb1bd94cea
 					pillDepth = depth;
 
 			}
@@ -161,7 +168,7 @@ public class CustomFeatureSet extends FeatureSet {
 					exploreJunctions(node, possibleMove, depth+1, distance);
 				return;
 			} else if (GAME.getNeighbour(node, move) == -1)
-				move = GAME.getPossibleMoves(node, move)[0]; // // Turn when we meet a corner
+				move = GAME.getPossibleMoves(node, move)[0]; // Turn when we meet a corner
 		}
 	}
 
