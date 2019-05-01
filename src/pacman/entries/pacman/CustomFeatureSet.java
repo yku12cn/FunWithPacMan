@@ -121,14 +121,10 @@ public class CustomFeatureSet extends FeatureSet {
 //	Searches up to DEPTH junctions, calculates the safety of that node, and populates it into junctions
 	private void exploreJunctions(int node, MOVE move, int depth, double distance) {
 
-		// This is incremented below every time you see a junction
-		if (depth >= DEPTH)
-			return;
-
+		if (depth >= DEPTH) return;
 		boolean pillInSegment = false;
 		boolean powerInSegment = false;
 
-		// Step
 		while (true) {
 			node = GAME.getNeighbour(node, move);
 			distance++;
@@ -136,10 +132,8 @@ public class CustomFeatureSet extends FeatureSet {
 // Basically nothing gets populated if there is a ghost on the next node			
 			// Stop for an approaching enemy
 			for (GHOST ghost : GHOST.values()) {
-				if (GAME.getGhostCurrentNodeIndex(ghost) == node)
-					if (move != GAME.getGhostLastMoveMade(ghost))
-						if (!GAME.isGhostEdible(ghost))
-							return;
+				if (GAME.getGhostCurrentNodeIndex(ghost) == node && move != GAME.getGhostLastMoveMade(ghost) && !GAME.isGhostEdible(ghost))
+					return;
 			}
 
 			// Notice a power pill
@@ -148,25 +142,21 @@ public class CustomFeatureSet extends FeatureSet {
 			if (powerIndex > -1 && GAME.isPowerPillStillAvailable(powerIndex)) {
 
 				double safety = safety(node, distance);
-				if (safety <= 0)
-					return;
+				if (safety <= 0) return;
 
 				powerInSegment = true;
-				if (depth < powerDepth)
-					powerDepth = depth;
+				if (depth < powerDepth) powerDepth = depth;
 			}
 
 			// Notice a regular pill (maybe)
 			int pillIndex = GAME.getPillIndex(node);
-			if (pillIndex > -1 && GAME.isPillStillAvailable(pillIndex))
-				pillInSegment = true;
+			if (pillIndex > -1 && GAME.isPillStillAvailable(pillIndex)) pillInSegment = true;
 
 			// Notice a junction
 			if (GAME.isJunction(node)) {
 				
 				double safety = safety(node, distance);
-				if (safety <= 0)
-					return;
+				if (safety <= 0) return;
 
 				if (!junctions.get(depth).containsKey(node) || junctions.get(depth).get(node) < safety)
 					junctions.get(depth).put(node, safety);
@@ -180,24 +170,18 @@ public class CustomFeatureSet extends FeatureSet {
 			if (GAME.isJunction(node)) {
 
 				MOVE[] possibleMoves = GAME.getPossibleMoves(node, move);
-				for (MOVE possibleMove : possibleMoves) {
+				for (MOVE possibleMove : possibleMoves)
 					exploreJunctions(node, possibleMove, depth+1, distance);
-				}
-
 				return;
-			}
-
-			// Turn at a corner
-			else if (GAME.getNeighbour(node, move) == -1)
-				move = GAME.getPossibleMoves(node, move)[0];
+			} else if (GAME.getNeighbour(node, move) == -1)
+				move = GAME.getPossibleMoves(node, move)[0]; // // Turn when we meet a corner
 		}
 	}
 
 	/** Find the highest-scoring path (ghost : depth) towards enemies in this direction. */
 	private double[] exploreEnemies(int node, MOVE move, int depth, double distance, double[] path) {
 
-		if (depth >= DEPTH-1)
-			return path;
+		if (depth >= DEPTH-1) return path;
 
 		// Step
 		while (true) {
@@ -224,7 +208,6 @@ public class CustomFeatureSet extends FeatureSet {
 
 					double[] pathCopy = Arrays.copyOf(path, path.length);
 					double[] newPath = exploreEnemies(node, possibleMove, depth+1, distance, pathCopy);
-					//double newScore = score(newPath);
                     double newScore = score(newPath);
 
 					if (newScore > bestScore) {
@@ -319,9 +302,8 @@ public class CustomFeatureSet extends FeatureSet {
 		// we can be more aggressive when there's still powerpills, in this case, score would be higher when we get close to ghost
 		if (hasPowerPillAvailable()) {
 			for (int i = 0; i < path.length; i++)
-				score += Math.pow((MAX_DISTANCE-path[i]) / 4, 2);
-		}
-		else {
+				score += Math.pow((MAX_DISTANCE - path[i]) / 4, 2);
+		} else {
 			for (int i = 0; i < path.length; i++)
 				score += Math.pow((path[i]) / 4, 2);
 		}
