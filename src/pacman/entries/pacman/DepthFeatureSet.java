@@ -12,18 +12,27 @@ import pacman.game.Game;
 public class DepthFeatureSet extends FeatureSet {
 	
 	// Lazy enum
-	private int REGULAR_PILL = 0;
-	private int POWER_PILL = 1;
-	private int REGULAR_GHOST = 2;
-	private int EDIBLE_GHOST = 3;
+	private int REGULAR_PILL;
+	private int POWER_PILL;
+	private int REGULAR_GHOST;
+	private int EDIBLE_GHOST;
+	private int OBJECTS; // How many
+	private int DEPTH; // Of search
+	private HashMap<Integer,Integer> nodeDepths; // To avoid double-counting
+	private int[][] counts; // How many at each depth
+	private double[] values; // Feature values
 
-	private int OBJECTS = 4; // How many
-	private int DEPTH = 4; // Of search
-	
-	private HashMap<Integer,Integer> nodeDepths = new HashMap<Integer,Integer>(); // To avoid double-counting
-	
-	private int[][] counts = new int[DEPTH][OBJECTS]; // How many at each depth
-	private double[] values = new double[OBJECTS*DEPTH]; // Feature values
+	public DepthFeatureSet() {
+		REGULAR_PILL = 0;
+		POWER_PILL = 1;
+		REGULAR_GHOST = 2;
+		EDIBLE_GHOST = 3;
+		OBJECTS = 4;
+		DEPTH = 4;
+		nodeDepths = new HashMap<>();
+		counts = new int[DEPTH][OBJECTS];
+		values = new double[OBJECTS*DEPTH];
+	}
 	
 	/** Report how many features there are. */
 	public int size() {
