@@ -20,7 +20,7 @@ public class QFunction {
 	}
 
 	/** Estimate the Q-value given the features for an action. */
-	public double evaluate(FeatureSet features) {
+	public double getQ(FeatureSet features) {
 		double sum = bias;
 		for (int i = 0; i < length; i++) {
             sum = sum + features.get(i) * weights[i];

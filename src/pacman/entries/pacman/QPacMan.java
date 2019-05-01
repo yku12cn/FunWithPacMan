@@ -30,9 +30,8 @@ public class QPacMan extends Controller<MOVE> {
     /** Override the move choice. */
     public void setMove(MOVE move) {
         last = -1;
-        for (int i=0; i<actions.length; i++) {
-            if (actions[i] == move)
-                last = i;
+        for (int i = 0; i < actions.length; i++) {
+            if (actions[i] == move) last = i;
         }
     }
 
@@ -40,10 +39,8 @@ public class QPacMan extends Controller<MOVE> {
     public void prepare(Game game) {
 
         // Eligibility traces
-        if (last != best)
-            Qfunction.clearTraces();
-        else
-            Qfunction.decayTraces(r*lambda);
+        if (last != best) Qfunction.clearTraces();
+        else Qfunction.decayTraces(r*lambda);
         Qfunction.addTraces(features[last]);
 
         // Q-value correction
@@ -55,8 +52,7 @@ public class QPacMan extends Controller<MOVE> {
             evaluateMoves(game);
             delta = delta + r * Qs[best];
         }
-        if (!testMode)
-            Qfunction.updateWeights(alpha*delta);
+        if (!testMode) Qfunction.updateWeights(alpha*delta);
     }
 
     /** Compute predictions for moves in this state. */
@@ -67,19 +63,14 @@ public class QPacMan extends Controller<MOVE> {
         features = new FeatureSet[length];
         Qs = new double[length];
         best = 0;
-        for (int i=0; i<length; i++) {
+        for (int i = 0; i < length; i++) {
             features[i] = prototype.extract(game, actions[i]);
-            Qs[i] = Qfunction.evaluate(features[i]);
-            if (Qs[i] > Qs[best])
-                best = i;
+            Qs[i] = Qfunction.getQ(features[i]);
+            if (Qs[i] > Qs[best]) best = i;
         }
         // Explore or exploit
-        if (!testMode && random.nextDouble() < e) {
-            last = random.nextInt(length);
-        }
-        else{
-            last = best;
-        }
+        if (!testMode && random.nextDouble() < e) last = random.nextInt(length);
+        else last = best;
     }
 
     private Random random = new Random();
@@ -95,7 +86,7 @@ public class QPacMan extends Controller<MOVE> {
     private int last; // Index of action actually being taken
     private boolean testMode;
 
-    private double e = 0.5; // Exploration rate
+    private double e = 0.1; // Exploration rate
     private double alpha = 0.001; // Learning rate
     private double r = 0.999; // Discount rate
     private double lambda = 0.7; // Backup weighting

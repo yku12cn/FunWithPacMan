@@ -33,8 +33,7 @@ public class SarsaPacMan extends Controller<MOVE> {
     public void setMove(MOVE move) {
         last = -1;
         for (int i=0; i<actions.length; i++)
-            if (actions[i] == move)
-                last = i;
+            if (actions[i] == move) last = i;
     }
 
     /** Learn if appropriate, and prepare for the next move. */
@@ -58,11 +57,8 @@ public class SarsaPacMan extends Controller<MOVE> {
             evaluateMoves(game);
 
         if (!testMode) {
-            if (game.gameOver()){
-                Qfunction.updateWeights(alpha*delta1);
-            }
-            else
-                update = true;
+            if (game.gameOver()) Qfunction.updateWeights(alpha*delta1);
+            else update = true;
         }
     }
 
@@ -76,16 +72,13 @@ public class SarsaPacMan extends Controller<MOVE> {
         Qs = new double[length];
         for (int i=0; i<length; i++){
             features[i] = prototype.extract(game, actions[i]);
-            Qs[i] = Qfunction.evaluate(features[i]);
-            if (Qs[i] > Qs[best])
-                best = i;
+            Qs[i] = Qfunction.getQ(features[i]);
+            if (Qs[i] > Qs[best]) best = i;
 
         }
         // explore or exploit
-        if (!testMode && random.nextDouble() < e)
-            last = random.nextInt(length);
-        else
-            last = best;
+        if (!testMode && random.nextDouble() < e) last = random.nextInt(length);
+        else last = best;
 
     }
 

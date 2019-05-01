@@ -53,37 +53,31 @@ public class PacmanDemo {
 
         init();
         defaultC.DELAY = defaultC.DELAY*5;
-
         FeatureSet feature;
-        if (Choice.startsWith("custom")) {
-            feature = new CustomFeatureSet();
-        }else {
-            feature = new DepthFeatureSet();
-        }
-        QPacMan pacman = new QPacMan(feature);
 
+        if (Choice.startsWith("custom"))  feature = new CustomFeatureSet();
+        else feature = new DepthFeatureSet();
+
+        QPacMan pacman = new QPacMan(feature);
         double[] initialData = new double[0];
 
         // evaluate the random policy
-        double [] result = evaluate(pacman, test_time);
+        double [] result = perform(pacman, test_time);
 
         System.out.println("score at start = " + result[0]);
 
         int num = 0;
-
         for (int x = 1; x <= train_time; x++) {
             double[] data = new double[initialData.length];
             train(pacman);
             num++;
-            double[] episodeData = new double[0];
+            double[] episode_data = new double[0];
 
-            for (int d=0; d<data.length; d++) data[d] += episodeData[d];
+            for (int d=0; d<data.length; d++) data[d] += episode_data[d];
 
-            double [] eval_result2 =evaluate(pacman, test_time) ;
-            double score = eval_result2[0];		// average score over test number of games
+            double [] result1 = perform(pacman, test_time) ;
+            double score = result1[0];		// average score over test number of games
             System.out.println("episode: " + num + "   score: " + score);
-
-
         }
         // vision of the game
         Game game=new Game(random.nextLong(), defaultC);
@@ -95,14 +89,14 @@ public class PacmanDemo {
             try{
                 Thread.sleep(defaultC.DELAY);
             }catch(Exception e){
-
+                e.printStackTrace();
             }
             gv.repaint();
         }
-        System.out.println("Training Done.");
+        System.out.println("Training Done");
     }
 
-    /** Train a learner for one more episode. */
+    /** Train a learner */
 
     public static void train(QPacMan pacman) {
 
@@ -115,7 +109,7 @@ public class PacmanDemo {
     }
 
     /** Estimate the current performance of a learner. */
-    public static double[] evaluate(QPacMan pacman, int num) {
+    public static double[] perform(QPacMan pacman, int num) {
 
         double[] performance = new double[2];
         double scores = 0;
