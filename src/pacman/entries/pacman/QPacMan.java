@@ -1,6 +1,5 @@
 package pacman.entries.pacman;
 
-
 import java.util.Random;
 import pacman.controllers.Controller;
 import pacman.game.Game;
@@ -8,7 +7,6 @@ import pacman.game.Constants.MOVE;
 
 
 public class QPacMan extends Controller<MOVE> {
-
 
     /** Initialize the policy. */
     public QPacMan(FeatureSet proto) {
@@ -26,7 +24,6 @@ public class QPacMan extends Controller<MOVE> {
 
     /** Choose a move. */
     public MOVE getMove(Game game, long timeDue) {
-
         return actions[last];
     }
 
@@ -47,7 +44,6 @@ public class QPacMan extends Controller<MOVE> {
             Qfunction.clearTraces();
         else
             Qfunction.decayTraces(r*lambda);
-
         Qfunction.addTraces(features[last]);
 
         // Q-value correction
@@ -57,9 +53,8 @@ public class QPacMan extends Controller<MOVE> {
 
         if (!game.gameOver()) {
             evaluateMoves(game);
-            delta += (r * Qs[best]);
+            delta = delta + r * Qs[best];
         }
-
         if (!testMode)
             Qfunction.updateWeights(alpha*delta);
     }
@@ -68,10 +63,11 @@ public class QPacMan extends Controller<MOVE> {
     private void evaluateMoves(Game game) {
 
         actions = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
-        features = new FeatureSet[actions.length];
-        Qs = new double[actions.length];
+        int length = actions.length;
+        features = new FeatureSet[length];
+        Qs = new double[length];
         best = 0;
-        for (int i=0; i<actions.length; i++) {
+        for (int i=0; i<length; i++) {
             features[i] = prototype.extract(game, actions[i]);
             Qs[i] = Qfunction.evaluate(features[i]);
             if (Qs[i] > Qs[best])
@@ -79,7 +75,7 @@ public class QPacMan extends Controller<MOVE> {
         }
         // Explore or exploit
         if (!testMode && random.nextDouble() < e) {
-            last = random.nextInt(actions.length);
+            last = random.nextInt(length);
         }
         else{
             last = best;

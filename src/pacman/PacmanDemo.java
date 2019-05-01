@@ -52,7 +52,6 @@ public class PacmanDemo {
     public static void RLdemo(){
 
         init();
-
         defaultC.DELAY = defaultC.DELAY*5;
         boolean watchAtEnd = true;
         boolean watchDuring = false;
@@ -72,32 +71,29 @@ public class PacmanDemo {
 
         System.out.println("score at start = " + result[0]);
 
-        int episode_num = 0;
+        int num = 0;
 
         for (int x = 1; x <= train_time; x++) {
             double[] data = new double[initialData.length];
-            episode(pacman);
-            episode_num++;
+            train(pacman);
+            num++;
             double[] episodeData = new double[0];
 
-            for (int d=0; d<data.length; d++) {
-                data[d] += episodeData[d];
-            }
+            for (int d=0; d<data.length; d++) data[d] += episodeData[d];
+
             double [] eval_result2 =evaluate(pacman, test_time) ;
             double score = eval_result2[0];		// average score over test number of games
-            System.out.println("episode: " + episode_num + "   score: " + score);
-            if (watchDuring){
-                watch(pacman,true);
-            }
+            System.out.println("episode: " + num + "   score: " + score);
+            if (watchDuring) watch(pacman,true);
+
         }
-        if (watchAtEnd)
-            watch(pacman, false);
+        if (watchAtEnd) watch(pacman, false);
         System.out.println("Training Done.");
     }
 
     /** Train a learner for one more episode. */
 
-    public static void episode(QPacMan pacman) {
+    public static void train(QPacMan pacman) {
 
         Game game = new Game(random.nextLong(), defaultC);
         pacman.initialize(game, false);
@@ -115,19 +111,15 @@ public class PacmanDemo {
         double steps = 0;
 
         for(int i = 0; i < num; i++) {
-
             Game game = new Game(random.nextLong(), defaultC);
             pacman.initialize(game, true);
             while(!game.gameOver()) {
-
                 game.advanceGame(pacman.getMove(game.copy(), -1), getGhostMove(game));
                 pacman.prepare(game);
             }
-
             scores += game.getScore();
             steps += game.getTotalTime();
         }
-
         performance[0] = scores/num;
         performance[1] = steps/num;
         return performance;
@@ -138,12 +130,9 @@ public class PacmanDemo {
         Game game=new Game(random.nextLong(), defaultC);
         pacman.initialize(game, true);
         GameView gv=new GameView(game).showGame();
-
         while(!game.gameOver()) {
-
             game.advanceGame(pacman.getMove(game.copy(), -1), getGhostMove(game));
             pacman.prepare(game);
-
             try{
                 Thread.sleep(defaultC.DELAY);
             }catch(Exception e){

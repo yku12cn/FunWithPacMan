@@ -5,15 +5,12 @@ import java.util.Random;
 import pacman.game.Game;
 import pacman.game.Constants.MOVE;
 
-
 public class SarsaPacMan extends Controller<MOVE> {
-
 
     /** Initialize the policy. */
     public SarsaPacMan(FeatureSet proto) {
         prototype = proto;
         Qfunction = new QFunction(prototype);
-
     }
 
     /** Prepare for the first move. */
@@ -73,10 +70,11 @@ public class SarsaPacMan extends Controller<MOVE> {
     private void evaluateMoves(Game game) {
 
         actions = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
-        features = new FeatureSet[actions.length];
+        int length = actions.length;
+        features = new FeatureSet[length];
         best = 0;
-        Qs = new double[actions.length];
-        for (int i=0; i<actions.length; i++){
+        Qs = new double[length];
+        for (int i=0; i<length; i++){
             features[i] = prototype.extract(game, actions[i]);
             Qs[i] = Qfunction.evaluate(features[i]);
             if (Qs[i] > Qs[best])
@@ -85,7 +83,7 @@ public class SarsaPacMan extends Controller<MOVE> {
         }
         // explore or exploit
         if (!testMode && random.nextDouble() < e)
-            last = random.nextInt(actions.length);
+            last = random.nextInt(length);
         else
             last = best;
 

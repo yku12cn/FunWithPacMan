@@ -1,6 +1,6 @@
 package pacman;
 
-public class RunTest {
+public class run {
 
 	public static void main(String[] args) {
 	    PacmanDemo.RLdemo();

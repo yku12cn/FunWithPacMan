@@ -24,9 +24,11 @@ public class StandardGhosts extends Controller<EnumMap<GHOST,MOVE>>
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
 				
 		Moves.clear();
-		for (GHOST ghost : GHOST.values())
-			if (game.doesGhostRequireAction(ghost))
-				Moves.put(ghost,getMove(ghost, game));
+		for (GHOST ghost : GHOST.values()) {
+            if (game.doesGhostRequireAction(ghost)) {
+                Moves.put(ghost, getMove(ghost, game));
+            }
+        }
 
 		return Moves;
 	}
@@ -42,15 +44,22 @@ public class StandardGhosts extends Controller<EnumMap<GHOST,MOVE>>
 		
 		if (rng.nextDouble() < CONSISTENCY) {
 			
-			int sourceNode = game.getGhostCurrentNodeIndex(ghost);
-			int targetNode = game.getPacmanCurrentNodeIndex();
-			
 			if (game.getGhostEdibleTime(ghost) > 0)
 			    // run away
-				nextMove = game.getApproximateNextMoveAwayFromTarget(sourceNode,targetNode,lastMove,metric);
+				nextMove = game.getApproximateNextMoveAwayFromTarget(
+                        game.getGhostCurrentNodeIndex(ghost),
+                        game.getPacmanCurrentNodeIndex(),
+                        lastMove,
+                        metric
+                );
 			else
 			    // chase the pacman
-				nextMove = game.getApproximateNextMoveTowardsTarget(sourceNode,targetNode,lastMove,metric);
+				nextMove = game.getApproximateNextMoveTowardsTarget(
+                        game.getGhostCurrentNodeIndex(ghost),
+                        game.getPacmanCurrentNodeIndex(),
+                        lastMove,
+                        metric
+                );
 		}
 		
 		return nextMove;
