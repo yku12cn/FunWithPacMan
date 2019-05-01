@@ -114,10 +114,6 @@ public class CustomFeatureSet extends FeatureSet {
 		return path;
 
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> 63ac63cd32be23a635bea4cf4dfe16cb1bd94cea
 	private void exploreJunctions(int node, MOVE move, int depth, double distance) {
 
 		if (depth >= DEPTH) return;
@@ -151,14 +147,9 @@ public class CustomFeatureSet extends FeatureSet {
 
 				if (!junctions.get(depth).containsKey(node) || junctions.get(depth).get(node) < safety)
 					junctions.get(depth).put(node, safety);
-<<<<<<< HEAD
 
 				if (!powerInSegment && pillInSegment && depth < pillDepth)
-=======
-				else if (!powerInSegment && pillInSegment && depth < pillDepth)
->>>>>>> 63ac63cd32be23a635bea4cf4dfe16cb1bd94cea
 					pillDepth = depth;
-
 			}
 
 			if (GAME.isJunction(node)) {
