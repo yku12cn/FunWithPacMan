@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="faeaa62c-6606-4734-a691-8c234d65fa9b" name="Default Changelist" comment="" />
+    <list default="true" id="faeaa62c-6606-4734-a691-8c234d65fa9b" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/src/pacman/PacmanDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/PacmanDemo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java" afterDir="false" />
+    </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,24 +29,30 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="750" />
+          <entry key="java" value="884" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="750" />
+          <entry key="JAVA" value="884" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="49" />
-          <entry key="py" value="1" />
+          <entry key="java" value="52" />
+          <entry key="longSubTask1" value="1" />
+          <entry key="py" value="2" />
+          <entry key="sourceTask" value="1" />
+          <entry key="subTask1" value="1" />
+          <entry key="subTask1Depth" value="1" />
+          <entry key="targetTask" value="1" />
+          <entry key="testTask" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="49" />
-          <entry key="PLAIN_TEXT" value="1" />
+          <entry key="JAVA" value="52" />
+          <entry key="PLAIN_TEXT" value="8" />
         </counts>
       </usages-collector>
     </session>
@@ -91,46 +101,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/pacman/PacmanDemo.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="470">
-              <caret line="155" column="33" lean-forward="true" selection-start-line="155" selection-start-column="33" selection-end-line="155" selection-end-column="33" />
+            <state relative-caret-position="1531">
+              <caret line="137" column="33" selection-start-line="137" selection-start-column="33" selection-end-line="137" selection-end-column="33" />
               <folding>
-                <element signature="imports" expanded="true" />
                 <element signature="e#1390#1391#0" expanded="true" />
                 <element signature="e#1445#1446#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1511">
-              <caret line="86" lean-forward="true" selection-start-line="86" selection-end-line="86" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/CustomFeatureSet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="330" column="8" selection-start-line="330" selection-start-column="8" selection-end-line="330" selection-end-column="8" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="106">
-              <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
             </state>
           </provider>
         </entry>
@@ -145,43 +121,33 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="410">
+              <caret line="112" column="52" lean-forward="true" selection-start-line="112" selection-start-column="52" selection-end-line="112" selection-end-column="52" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#710#711#0" expanded="true" />
+                <element signature="e#746#747#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/pacman/entries/ghosts/StandardGhosts.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="125">
-              <caret line="42" column="45" lean-forward="true" selection-start-line="42" selection-start-column="45" selection-end-line="42" selection-end-column="45" />
+              <caret line="42" column="45" selection-start-line="42" selection-start-column="45" selection-end-line="42" selection-end-column="45" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pacman/controllers/HumanController.java">
+        <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="324">
-              <caret line="24" column="5" lean-forward="true" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="5" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pacman/controllers/KeyBoardInput.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
-              <caret line="9" column="1" lean-forward="true" selection-start-line="9" selection-start-column="1" selection-end-line="9" selection-end-column="1" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/DepthFeatureSet.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2394">
-              <caret line="141" column="9" selection-start-line="141" selection-start-column="9" selection-end-line="141" selection-end-column="9" />
+            <state relative-caret-position="461">
+              <caret line="59" column="17" lean-forward="true" selection-start-line="59" selection-start-column="17" selection-end-line="59" selection-end-column="17" />
             </state>
           </provider>
         </entry>
@@ -218,11 +184,11 @@
         <option value="$PROJECT_DIR$/src/pacman/controllers/KeyBoardInput.java" />
         <option value="$PROJECT_DIR$/src/pacman/entries/pacman/FeatureSet.java" />
         <option value="$PROJECT_DIR$/src/pacman/entries/pacman/CustomFeatureSet.java" />
-        <option value="$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java" />
         <option value="$PROJECT_DIR$/src/pacman/controllers/Controller.java" />
         <option value="$PROJECT_DIR$/src/pacman/RunTest.java" />
-        <option value="$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java" />
         <option value="$PROJECT_DIR$/src/pacman/entries/ghosts/StandardGhosts.java" />
+        <option value="$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java" />
+        <option value="$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java" />
         <option value="$PROJECT_DIR$/src/pacman/PacmanDemo.java" />
       </list>
     </option>
@@ -303,7 +269,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556682801234" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556683645099" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -345,15 +311,16 @@
       <workItem from="1556427417392" duration="8056000" />
       <workItem from="1556667626716" duration="6612000" />
       <workItem from="1556676344273" duration="3552000" />
-      <workItem from="1556680074179" duration="2546000" />
+      <workItem from="1556680074179" duration="3457000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="32192000" />
+    <option name="totallyTimeSpent" value="33103000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="805" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.32689556" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -365,7 +332,7 @@
       <window_info id="Capture Tool" order="7" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.20336606" />
+      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.20617111" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -426,15 +393,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pacman/controllers/examples/Legacy.java" />
-    <entry file="file://$PROJECT_DIR$/src/pacman/controllers/examples/AggressiveGhosts.java" />
-    <entry file="file://$PROJECT_DIR$/src/pacman/controllers/examples/StarterPacMan.java" />
-    <entry file="file://$PROJECT_DIR$/src/pacman/controllers/examples/RandomPacMan.java" />
-    <entry file="file://$PROJECT_DIR$/src/pacman/controllers/examples/RandomNonRevPacMan.java" />
-    <entry file="file://$PROJECT_DIR$/src/pacman/controllers/examples/NearestPillPacMan.java" />
     <entry file="file://$PROJECT_DIR$/src/pacman/controllers/examples/NearestPillPacManVS.java" />
     <entry file="file://$PROJECT_DIR$/src/pacman/controllers/examples/Legacy2TheReckoning.java" />
     <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/BasicRLPacMan.java" />
@@ -552,30 +510,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="106">
-          <caret line="11" column="26" selection-start-line="11" selection-start-column="26" selection-end-line="11" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pacman/RunTest.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1511">
-          <caret line="86" lean-forward="true" selection-start-line="86" selection-end-line="86" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/pacman/controllers/KeyBoardInput.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
@@ -606,16 +540,62 @@
     <entry file="file://$PROJECT_DIR$/src/pacman/entries/ghosts/StandardGhosts.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="125">
-          <caret line="42" column="45" lean-forward="true" selection-start-line="42" selection-start-column="45" selection-end-line="42" selection-end-column="45" />
+          <caret line="42" column="45" selection-start-line="42" selection-start-column="45" selection-end-line="42" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/testTask">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/targetTask">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/subTask1Depth">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/subTask1">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/sourceTask">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/longSubTask1">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/genTasks.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="410">
+          <caret line="112" column="52" lean-forward="true" selection-start-line="112" selection-start-column="52" selection-end-line="112" selection-end-column="52" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#710#711#0" expanded="true" />
+            <element signature="e#746#747#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="461">
+          <caret line="59" column="17" lean-forward="true" selection-start-line="59" selection-start-column="17" selection-end-line="59" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/pacman/RunTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/pacman/PacmanDemo.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="470">
-          <caret line="155" column="33" lean-forward="true" selection-start-line="155" selection-start-column="33" selection-end-line="155" selection-end-column="33" />
+        <state relative-caret-position="1531">
+          <caret line="137" column="33" selection-start-line="137" selection-start-column="33" selection-end-line="137" selection-end-column="33" />
           <folding>
-            <element signature="imports" expanded="true" />
             <element signature="e#1390#1391#0" expanded="true" />
             <element signature="e#1445#1446#0" expanded="true" />
           </folding>

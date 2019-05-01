@@ -34,7 +34,7 @@ public class PacmanDemo {
         init();
         defaultC.DELAY = defaultC.DELAY*10;
 
-        Game game=new Game(rng.nextLong(), defaultC);
+        Game game=new Game(random.nextLong(), defaultC);
         GameView gv=new GameView(game).showGame();
         gv.getFrame().addKeyListener(human.getKeyboardInput());
 
@@ -68,9 +68,9 @@ public class PacmanDemo {
         double[] initialData = new double[0];
 
         // evaluate the random policy
-        double [] eval_result = evaluate(pacman, test_time);
+        double [] result = evaluate(pacman, test_time);
 
-        System.out.println("score at start = " + eval_result[0]);
+        System.out.println("score at start = " + result[0]);
 
         int episode_num = 0;
 
@@ -99,7 +99,7 @@ public class PacmanDemo {
 
     public static void episode(QPacMan pacman) {
 
-        Game game = new Game(rng.nextLong(), defaultC);
+        Game game = new Game(random.nextLong(), defaultC);
         pacman.initialize(game, false);
         while(!game.gameOver()) {
             game.advanceGame(pacman.getMove(game.copy(), -1), getGhostMove(game));
@@ -116,7 +116,7 @@ public class PacmanDemo {
 
         for(int i = 0; i < num; i++) {
 
-            Game game = new Game(rng.nextLong(), defaultC);
+            Game game = new Game(random.nextLong(), defaultC);
             pacman.initialize(game, true);
             while(!game.gameOver()) {
 
@@ -135,7 +135,7 @@ public class PacmanDemo {
 
     /** watch the learner play a game. */
     public static void watch(QPacMan pacman, boolean hide) {
-        Game game=new Game(rng.nextLong(), defaultC);
+        Game game=new Game(random.nextLong(), defaultC);
         pacman.initialize(game, true);
         GameView gv=new GameView(game).showGame();
 
@@ -161,7 +161,7 @@ public class PacmanDemo {
     public static String Choice = "customS";
     public static int train_time = 400;
     public static int test_time = 1; // test episodes
-    public static Random rng = new Random();
+    public static Random random = new Random();
     public static StandardGhosts ghostsS = new StandardGhosts();
 
     public static int maze_num = 2;

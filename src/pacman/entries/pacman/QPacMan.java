@@ -17,8 +17,8 @@ public class QPacMan extends Controller<MOVE> {
     }
 
     /** Prepare for the first move. */
-    public void initialize(Game game, boolean testMode) {
-        this.testMode = testMode;
+    public void initialize(Game game, boolean test) {
+        testMode = test;
         lastScore = 0;
         Qfunction.clearTraces();
         update = false;
@@ -45,9 +45,8 @@ public class QPacMan extends Controller<MOVE> {
 
         // Do a delayed gradient-descent update
         if (update) {
-            delta2 = (r * Qs[last]);
-            Qfunction.updateWeights(alpha*(delta1+delta2));
-
+            delta2 = r * Qs[last];
+            Qfunction.updateWeights(alpha * (delta1+delta2));
         }
         // Eligibility traces
         Qfunction.decayTraces(r*lambda);
@@ -61,7 +60,6 @@ public class QPacMan extends Controller<MOVE> {
         if (!game.gameOver())
             evaluateMoves(game);
 
-        // Gradient descent update
         if (!testMode) {
             if (game.gameOver()){
                 Qfunction.updateWeights(alpha*delta1);
@@ -75,7 +73,6 @@ public class QPacMan extends Controller<MOVE> {
     private void evaluateMoves(Game game) {
 
         actions = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
-
         features = new FeatureSet[actions.length];
         best = 0;
         Qs = new double[actions.length];
@@ -86,15 +83,15 @@ public class QPacMan extends Controller<MOVE> {
                 best = i;
 
         }
-        // Explore or exploit
-        if (!testMode && rng.nextDouble() < e)
-            last = rng.nextInt(actions.length);
+        // explore or exploit
+        if (!testMode && random.nextDouble() < e)
+            last = random.nextInt(actions.length);
         else
             last = best;
 
     }
 
-    private Random rng = new Random();
+    private Random random = new Random();
     private FeatureSet prototype;
     private QFunction Qfunction; // Learned policy
 
