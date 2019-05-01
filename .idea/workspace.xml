@@ -1,30 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="faeaa62c-6606-4734-a691-8c234d65fa9b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/PacmanDemo.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/PacmanDemo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/controllers/Controller$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/controllers/Controller$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/controllers/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/controllers/Controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/ghosts/StandardGhosts.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/ghosts/StandardGhosts.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/pacman/CustomFeatureSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/pacman/CustomFeatureSet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/pacman/FeatureSet.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/pacman/FeatureSet.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/pacman/QFunction.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/pacman/QFunction.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/pacman/QPacMan.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/entries/pacman/QPacMan.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/FunWithPacMan/pacman/utils/DataFile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/output.png" beforeDir="false" afterPath="$PROJECT_DIR$/output.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/PacmanDemo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/PacmanDemo.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/RunTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/RunTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/controllers/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/controllers/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/controllers/HumanController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/controllers/HumanController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/controllers/KeyBoardInput.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/controllers/KeyBoardInput.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/entries/ghosts/StandardGhosts.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/entries/ghosts/StandardGhosts.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/entries/pacman/CustomFeatureSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/entries/pacman/CustomFeatureSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/entries/pacman/FeatureSet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/entries/pacman/FeatureSet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/entries/pacman/QFunction.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/pacman/entries/pacman/QPacMan.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/pacman/utils/DataFile.java" beforeDir="false" />
-    </list>
+    <list default="true" id="faeaa62c-6606-4734-a691-8c234d65fa9b" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -326,7 +303,7 @@
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556682212503" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1556682801234" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.0" />
@@ -368,16 +345,15 @@
       <workItem from="1556427417392" duration="8056000" />
       <workItem from="1556667626716" duration="6612000" />
       <workItem from="1556676344273" duration="3552000" />
-      <workItem from="1556680074179" duration="2133000" />
+      <workItem from="1556680074179" duration="2546000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="31779000" />
+    <option name="totallyTimeSpent" value="32192000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="805" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.32689556" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
