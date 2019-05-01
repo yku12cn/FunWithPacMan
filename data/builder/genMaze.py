@@ -10,17 +10,21 @@ def main():
 
 ###Draw maze as row and col###
 ###Add as many as you want!###
-  m.addRow(0,50)
-  m.addCol(25,25)
+  m.addRow(0,20)
+  m.addCol(0,20)
+  m.addRow(40,20)
+  m.addCol(20,20)
+  m.addCol(10,20)
+  m.addRow(30,20)
 ###Draw maze as row and col###
 
 #####Add Teleporter points####
 ##Up-3,Right-4,Down-5,Left-6##
 ###Add as many as you want!###
-  m.linkNodes(0,50,6)
+  #m.linkNodes(0,100,6)
   #For example, this means, 'at Node0', go 'left' will teleport to 'Node50'
   #And the reverse way(Node50 to Node0 is automatically added)
-  m.linkNodes(25,75,3)
+  #m.linkNodes(130,230,6)
 #####Add Teleporter points####
 
 ##Define density of small pills##
@@ -29,11 +33,11 @@ def main():
 
 ##Put power Pill at some Node##
 ####Add as many as you want!###
-  m.setPower(0)
+  m.setPower(50)
 ##Put power Pill at some Node##
 
 ##Set Pacman start Node and Ghost start Node##
-  m.setStartNodes(25, 49)
+  m.setStartNodes(0, 89)
 ##Set Pacman start Node and Ghost start Node##
 
 ##Set Ghost holder as X Y coordinates##

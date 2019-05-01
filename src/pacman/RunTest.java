@@ -1,5 +1,6 @@
 package pacman;
 
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import pacman.controllers.HumanController;
 import pacman.controllers.KeyBoardInput;
 import pacman.game.Constants;
@@ -10,13 +11,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.Buffer;
 import java.text.DecimalFormat;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Queue;
-import java.util.Random;
+import java.util.*;
 
 import javax.imageio.ImageIO;
 
@@ -35,9 +30,11 @@ import pacman.game.GameView;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.internal.Maze;
+import pacman.neural_net.NNPacMan;
 import pacman.utils.DataFile;
 import pacman.utils.LearningCurve;
 import pacman.utils.Stats;
+import sun.java2d.pipe.ShapeSpanIterator;
 
 public class RunTest {
 	
@@ -77,13 +74,13 @@ public class RunTest {
     public static ChaserGhosts ghostsC = new ChaserGhosts();
     public static LineGhosts ghostsL = new LineGhosts();
     
-    public static int ghostType = 0;		// 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
+    public static int ghostType = 1;		// 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
     
     // Task parameters
     public static int mazeNum = 4;
     // Controls how fast ghosts move when pacman has eaten power pill. Lower numbers = slower (1 = frozen). 
     public static int ghostSlowdown = 2;
-    public static int nGhosts = 4;
+    public static int nGhosts = 1;
     
     public static Constants defaultConstants;
     
@@ -91,9 +88,45 @@ public class RunTest {
 	 * Run experiments.
 	 */
 	public static void main(String[] args) {
-		demo();
+		//demo();
         //human();
+        NNdemo();
 	}
+
+    /** NN demo **/
+    public static void NNdemo(){
+        defaultConstants = new Constants();
+        defaultConstants.MAZE_NUM = mazeNum; //which maze;
+        defaultConstants.GHOST_TYPE = ghostType; //which of three types of ghosts 0 = RandomGhosts, 1 = StandardGhosts, 2 = ChaserGhosts
+        // Controls how fast ghosts move when pacman has eaten power pill. Lower numbers = slower (1 = frozen).
+        defaultConstants.GHOST_SPEED_REDUCTION = ghostSlowdown; //ghost speed
+        defaultConstants.NUM_GHOSTS = nGhosts; //how many ghosts
+
+        //increase delay for watching
+        defaultConstants.DELAY = defaultConstants.DELAY*10;
+
+        Game game=new Game(rng.nextLong(), defaultConstants);
+        NNPacMan brain = new NNPacMan(game);
+
+        HumanController human = new HumanController(new KeyBoardInput());
+//        for(int i = 0; i< game.getNumberOfNodes() - 1; i++){
+//            System.out.println(game.currentMaze.graph[i].pillIndex);
+//        }
+
+        GameView gv=new GameView(game).showGame();
+        gv.getFrame().addKeyListener(human.getKeyboardInput());
+
+        while(!game.gameOver()) {
+            game.advanceGame(brain.TgetMove(game,200000), getGhostMove(game, game.constants.GHOST_TYPE));
+            //System.out.println(game.getTotalTime());
+            try {
+                Thread.sleep(defaultConstants.DELAY);
+            } catch (Exception e) {
+            }
+            gv.repaint();
+        }
+
+    }
 
 	/** Human demo **/
     public static void human(){
@@ -520,13 +553,13 @@ public class RunTest {
 		
 		switch(ghostType){
 			case 0:
-				return ghostsR.getMove(game.copy(), -1);
+				return ghostsR.getMove(game, -1);
 			case 1:
-				return ghostsS.getMove(game.copy(), -1);
+				return ghostsS.getMove(game, -1);
 			case 2:
-				return ghostsC.getMove(game.copy(), -1);
+				return ghostsC.getMove(game, -1);
 			case 3:
-				return ghostsL.getMove(game.copy(), -1);
+				return ghostsL.getMove(game, -1);
 			default:
 				System.err.println("INVALID GHOST TYPE");
 				System.exit(1);
