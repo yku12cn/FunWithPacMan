@@ -69,6 +69,7 @@ public class RunTest {
         NNPacMan brain = new NNPacMan(game);
 
         brain.train(game,10000);
+        brain.saveBrain("myBrain.dat"); // Save training result
 
         HumanController human = new HumanController(new KeyBoardInput());
 //        for(int i = 0; i< game.getNumberOfNodes() - 1; i++){
@@ -112,7 +113,6 @@ public class RunTest {
 
         while(!game.gameOver()) {
             game.advanceGame(human.getMove(game, -1), getGhostMove(game, game.constants.GHOST_TYPE));
-
             try {
                 Thread.sleep(defaultConstants.DELAY);
             } catch (Exception e) {

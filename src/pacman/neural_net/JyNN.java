@@ -1,6 +1,8 @@
 package pacman.neural_net;
 
-public class JyNN {
+import java.io.Serializable;
+
+public class JyNN implements Serializable {
     private Jymax[] W; //Weights
     private Jymax[] B; //Bias
     Jymax[] X; //Current value for each layer

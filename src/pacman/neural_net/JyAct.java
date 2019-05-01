@@ -1,9 +1,11 @@
 package pacman.neural_net;
 
+import java.io.Serializable;
+
 /**
  * Abstract class for user defined activation function
  **/
-public abstract class JyAct {
+public abstract class JyAct implements Serializable {
 
     public JyAct() {
     }

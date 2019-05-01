@@ -8,9 +8,10 @@ package pacman.neural_net;// File:         Jymax.java
 //  initial impound
 //
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Jymax {
+public class Jymax implements Serializable {
     private float[][] matrix;
     private int height;
     private int width;

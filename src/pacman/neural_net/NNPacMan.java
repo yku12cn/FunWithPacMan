@@ -8,6 +8,7 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
+import java.io.*;
 import java.util.EnumMap;
 
 public class NNPacMan {
@@ -221,6 +222,33 @@ public class NNPacMan {
         }
     }
 
+    /** Save current brain to file **/
+    public void saveBrain(String name){
+        try {
+            ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(name));
+            os.writeObject(this.brain);
+            os.close();
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    /** Load saved brain from file **/
+    public void loadBrain(String name){
+        try{
+            ObjectInputStream is = new ObjectInputStream(new FileInputStream(name));
+            brain =(JyNN) is.readObject();
+            is.close();
+        }catch (FileNotFoundException e){
+            e.printStackTrace();
+        }catch (IOException e){
+            e.printStackTrace();
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
 
     /** Helper function to get ghosts action **/
     private static EnumMap<GHOST, MOVE> GhostMove(Game game, int ghostType){
