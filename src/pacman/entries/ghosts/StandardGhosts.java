@@ -18,18 +18,17 @@ public class StandardGhosts extends Controller<EnumMap<GHOST,MOVE>>
 	private Random rng = new Random();
 	private static final double CONSISTENCY = 0.8;
 	
-	private EnumMap<GHOST,MOVE> myMoves = new EnumMap<GHOST,MOVE>(GHOST.class);
+	private EnumMap<GHOST,MOVE> Moves = new EnumMap<>(GHOST.class);
 
 	/** Fill all ghost moves. */
 	public EnumMap<GHOST, MOVE> getMove(Game game, long timeDue) {
 				
-		myMoves.clear();
-
+		Moves.clear();
 		for (GHOST ghost : GHOST.values())
 			if (game.doesGhostRequireAction(ghost))
-				myMoves.put(ghost,getMove(ghost, game));
+				Moves.put(ghost,getMove(ghost, game));
 
-		return myMoves;
+		return Moves;
 	}
 	
 	/** Fill one ghost move. */
@@ -38,8 +37,8 @@ public class StandardGhosts extends Controller<EnumMap<GHOST,MOVE>>
 		DM metric = DM.PATH;
 		MOVE[] allMoves = MOVE.values();
 		
-		MOVE myLastMove = game.getGhostLastMoveMade(ghost);
-		MOVE myNextMove = allMoves[rng.nextInt(allMoves.length)];
+		MOVE lastMove = game.getGhostLastMoveMade(ghost);
+		MOVE nextMove = allMoves[rng.nextInt(allMoves.length)];
 		
 		if (rng.nextDouble() < CONSISTENCY) {
 			
@@ -47,11 +46,13 @@ public class StandardGhosts extends Controller<EnumMap<GHOST,MOVE>>
 			int targetNode = game.getPacmanCurrentNodeIndex();
 			
 			if (game.getGhostEdibleTime(ghost) > 0)
-				myNextMove = game.getApproximateNextMoveAwayFromTarget(sourceNode,targetNode,myLastMove,metric);
+			    // run away
+				nextMove = game.getApproximateNextMoveAwayFromTarget(sourceNode,targetNode,lastMove,metric);
 			else
-				myNextMove = game.getApproximateNextMoveTowardsTarget(sourceNode,targetNode,myLastMove,metric);
+			    // chase the pacman
+				nextMove = game.getApproximateNextMoveTowardsTarget(sourceNode,targetNode,lastMove,metric);
 		}
 		
-		return myNextMove;
+		return nextMove;
 	}
 }

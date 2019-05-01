@@ -328,14 +328,14 @@ public class CustomFeatureSet extends FeatureSet {
 	/** Compute the score of a ghost path. Closer ghosts mean higher scores. */
 	private double score(double[] path,Game game) {
 		double score = 0;
-		//if (hasPowerPillAvailable(game)) {
+		if (hasPowerPillAvailable(game)) {
             for (int i = 0; i < path.length; i++)
                 score += Math.pow((MAX_DISTANCE-path[i]) / 4, 2);
-        //}
-       //else {
-        //    for (int i = 0; i < path.length; i++)
-          //      score += Math.pow((path[i]) / 4, 2);
-        //}
+        }
+       else {
+            for (int i = 0; i < path.length; i++)
+                score += Math.pow((path[i]) / 4, 2);
+        }
 		return score / path.length;
 	}
 

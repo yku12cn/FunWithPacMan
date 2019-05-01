@@ -3,11 +3,6 @@ package pacman.controllers;
 import pacman.game.Game;
 
 /**
- * This class is the superclass of your controller. In contains the code required to run the 
- * controller as a thread. In provides numerous methods that allow the Executor to use the 
- * controller in various different execution modes. Your controller only needs to provide the
- * code for the getMove() method.
- *
  * @param <T> The generic type of the move to be returned (either a single move for Ms Pac-Man or an EnumMap for the ghosts).
  */
 public abstract class Controller<T> implements Runnable
@@ -16,7 +11,7 @@ public abstract class Controller<T> implements Runnable
 	private volatile boolean threadStillRunning;
 	private long timeDue;
 	private Game game;
-	protected T lastMove;	//this is now protected. You can set this directly in your getMove() method to save an immediate response.
+	protected T lastMove;
 
 	/**
 	 * Instantiates a new controller. The constructor initialises the class variables.
@@ -29,41 +24,30 @@ public abstract class Controller<T> implements Runnable
 		threadStillRunning=false;
 	}
 
-
-
 	/**
 	 * Retrieves the move from the controller (whatever is stored in the class variable).
 	 *
-	 * @return The move stored in the class variable 'lastMove'
+	 * @return The move stored in the class variable lastMove
 	 */
 	public final T getMove()
 	{
 		return lastMove;
 	}
-	
-	/* (non-Javadoc)
-	 * @see java.lang.Runnable#run()
-	 */
-	public final void run()
-	{
-		while(alive)
-		{
-			synchronized(this)
-			{
-				while(!wasSignalled)
-				{
-					try
-					{
+
+	public final void run() {
+
+		while(alive) {
+			synchronized(this) {
+				while(!wasSignalled) {
+					try {
 						wait();
 					}
-					catch(InterruptedException e)
-					{
+					catch(InterruptedException e) {
 						e.printStackTrace();
 					}
 				}
 				
-				if(!threadStillRunning)
-				{
+				if(!threadStillRunning) {
 					new Thread()
 					{
 						public void run()
@@ -83,15 +67,8 @@ public abstract class Controller<T> implements Runnable
 
 
 	/**
-	 * Compute the next move given a copy of the current game and a time the move has to be computed by.
-	 * This is the method contestants need to implement. Many examples are available in
-	 * 			pacman.controllers.examples
-	 * Your controllers must be in the files: pacman.entries.pacman.MyPacMan.java for Pac-Man controllers or
-	 * pacman.entries.ghosts.MyGhosts.java for ghosts controllers.
-	 *
-	 * @param game A copy of the current game
-	 * @param timeDue The time the next move is due
-	 * @return The move to be played (i.e., the move calculated by your controller)
+	 * Compute the next move given a copy of the current game
+     * and a time the move has to be computed by.
 	 */
 	public abstract T getMove(Game game,long timeDue);
 }

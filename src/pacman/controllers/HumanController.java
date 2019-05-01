@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import pacman.game.Game;
 import pacman.game.Constants.MOVE;
 
-/*
+/**
  * Allows a human player to play the game using the arrow key of the keyboard.
  */
 public class HumanController extends Controller<MOVE>

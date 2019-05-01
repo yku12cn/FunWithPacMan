@@ -1,38 +1,13 @@
 package pacman.entries.pacman;
 
 import pacman.controllers.Controller;
-import java.io.InputStreamReader;
 import java.util.Random;
-import java.util.Scanner;
-
 import pacman.game.Game;
 import pacman.game.Constants.MOVE;
 
 
 public class QPacMan extends Controller<MOVE> {
 
-    private Random rng = new Random();
-    private FeatureSet prototype; // Class to use
-    private QFunction Qfunction; // Learned policy
-
-    private MOVE[] actions; // Actions possible in the current state
-    private double[] qvalues; // Q-values for actions in the current state
-    private FeatureSet[] features; // Features for actions in the current state
-
-    private int lastScore; // Last known game score
-    private int bestActionIndex; // Index of current best action
-    private int lastActionIndex; // Index of action actually being taken
-    private boolean testMode; // Don't explore or learn or take advice?
-    private boolean doUpdate; // Perform a delayed gradient-descent update?
-    private double delta1; // First part of delayed update: r-Q(s,a)
-    private double delta2; // Second part of delayed update: yQ(s',a')
-
-    private double EPSILON = 0.05; // Exploration rate
-    private double ALPHA = 0.001; // Learning rate
-    private double GAMMA = 0.999; // Discount rate
-    private double LAMBDA = 0.9; // Backup weighting
-
-    public boolean debug = false;
 
     /** Initialize the policy. */
     public QPacMan(FeatureSet proto) {
@@ -42,11 +17,11 @@ public class QPacMan extends Controller<MOVE> {
     }
 
     /** Prepare for the first move. */
-    public void startEpisode(Game game, boolean testMode) {
+    public void initialize(Game game, boolean testMode) {
         this.testMode = testMode;
         lastScore = 0;
         Qfunction.clearTraces();
-        doUpdate = false;
+        update = false;
         delta1 = 0;
         delta2 = 0;
         evaluateMoves(game);
@@ -54,49 +29,45 @@ public class QPacMan extends Controller<MOVE> {
 
     /** Choose a move. */
     public MOVE getMove(Game game, long timeDue) {
-        return actions[lastActionIndex];
+        return actions[last];
     }
 
     /** Override the move choice. */
     public void setMove(MOVE move) {
-        lastActionIndex = -1;
+        last = -1;
         for (int i=0; i<actions.length; i++)
             if (actions[i] == move)
-                lastActionIndex = i;
+                last = i;
     }
 
     /** Learn if appropriate, and prepare for the next move. */
-    public void processStep(Game game) {
+    public void prepare(Game game) {
 
         // Do a delayed gradient-descent update
-        if (doUpdate) {
-            delta2 = (GAMMA * qvalues[lastActionIndex]);
-            Qfunction.updateWeights(ALPHA*(delta1+delta2));
+        if (update) {
+            delta2 = (r * Qs[last]);
+            Qfunction.updateWeights(alpha*(delta1+delta2));
 
         }
         // Eligibility traces
-        Qfunction.decayTraces(GAMMA*LAMBDA);
-        Qfunction.addTraces(features[lastActionIndex]);
+        Qfunction.decayTraces(r*lambda);
+        Qfunction.addTraces(features[last]);
 
         // Q-value correction
         double reward = game.getScore() - lastScore;
         lastScore = game.getScore();
-        delta1 = reward - qvalues[lastActionIndex];
+        delta1 = reward - Qs[last];
 
         if (!game.gameOver())
             evaluateMoves(game);
 
         // Gradient descent update
         if (!testMode) {
-
-            // Right away if game is over
             if (game.gameOver()){
-                Qfunction.updateWeights(ALPHA*delta1);
-
+                Qfunction.updateWeights(alpha*delta1);
             }
-            // Otherwise delayed (for potential advice)
             else
-                doUpdate = true;
+                update = true;
         }
     }
 
@@ -106,78 +77,41 @@ public class QPacMan extends Controller<MOVE> {
         actions = game.getPossibleMoves(game.getPacmanCurrentNodeIndex());
 
         features = new FeatureSet[actions.length];
+        best = 0;
+        Qs = new double[actions.length];
         for (int i=0; i<actions.length; i++){
             features[i] = prototype.extract(game, actions[i]);
+            Qs[i] = Qfunction.evaluate(features[i]);
+            if (Qs[i] > Qs[best])
+                best = i;
 
-            if (debug){
-                System.out.print("Features for action "+actions[i]+"\t");
-                for (int t = 0; t < features[i].size();t++)
-                    System.out.print("\t"+features[i].get(t));
-                System.out.println();
-            }
         }
-
-        qvalues = new double[actions.length];
-        for (int i=0; i<actions.length; i++){
-            qvalues[i] = Qfunction.evaluate(features[i]);
-
-            if (debug){
-                System.out.println("Q value for action "+actions[i]+":\t"+qvalues[i]);
-            }
-        }
-
-        bestActionIndex = 0;
-        for (int i=0; i<actions.length; i++)
-            if (qvalues[i] > qvalues[bestActionIndex])
-                bestActionIndex = i;
-
         // Explore or exploit
-        if (!testMode && rng.nextDouble() < EPSILON)
-            lastActionIndex = rng.nextInt(actions.length);
+        if (!testMode && rng.nextDouble() < e)
+            last = rng.nextInt(actions.length);
         else
-            lastActionIndex = bestActionIndex;
+            last = best;
 
-        if (debug){
-            Scanner scanner = new Scanner(new InputStreamReader(System.in));
-            String input = scanner.nextLine();
-        }
     }
 
-    /** Get the current possible moves. */
-    public MOVE[] getMoves() {
-        return actions;
-    }
+    private Random rng = new Random();
+    private FeatureSet prototype;
+    private QFunction Qfunction; // Learned policy
 
-    /** Get the current Q-value array. */
-    public double[] getQValues() {
-        return qvalues;
-    }
+    private MOVE[] actions; // Actions possible in the current state
+    private double[] Qs; // Q-values for actions in the current state
+    private FeatureSet[] features; // Features for actions in the current state
 
-    /** Get the current features for an action. */
-    public FeatureSet getFeatures(MOVE move) {
-        int actionIndex = -1;
-        for (int i=0; i<actions.length; i++)
-            if (actions[i] == move)
-                actionIndex = i;
-        return features[actionIndex];
-    }
+    private int lastScore; // Last known game score
+    private int best; // Index of current best action
+    private int last; // Index of action actually being taken
+    private boolean testMode;
+    private boolean update;
+    private double delta1; // First part of delayed update: r-Q(s,a)
+    private double delta2; // Second part of delayed update: yQ(s',a')
 
-    /** Save the current policy to a file. */
-    public void savePolicy(String filename) {
-        Qfunction.save(filename);
-    }
-
-    /** Return to a policy from a file. */
-    public void loadPolicy(String filename) {
-        Qfunction = new QFunction(prototype, filename);
-    }
-
-    public QFunction getQFunction(){
-        return Qfunction;
-    }
-
-    public double[] episodeData() { // Override to add data to learning curves
-        double[] data = new double[0];
-        return data;
-    }
+    private double e = 0.01; // Exploration rate
+    private double alpha = 0.01; // Learning rate
+    private double r = 0.999; // Discount rate
+    private double lambda = 0.9; // Backup weighting
 }
