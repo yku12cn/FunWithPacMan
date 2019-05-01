@@ -10,37 +10,24 @@ import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
 import pacman.game.Game;
 
-/**
- * Specially crafted features that work well in this domain.
- */
 public class CustomFeatureSet extends FeatureSet {
 
-	private int DEPTH = 4; // Of search 	// 4
-	
-	// DEPTH only controls how many branches/junctions to search upto. Otherwise, it will keep following the path or corner until a junction is reached.
-	
-	
-	private int FEATURES = 7; // How many (DEPTH + 3)
-	private double MAX_DISTANCE = 200; // Between nodes
-	private double MAX_SCORE = Math.pow(MAX_DISTANCE/4,2); // Of a path
-
-	// Computation storage
-// There will be DEPTH hashmaps in this arraylist
-// For each depth level (i.e. junction), you populate that junction node with its (max) safety score. 	
-	
+	private int DEPTH; // Depth controls how many junctions we will search
+	private int FEATURES; // DEPTH + 3
+	private double MAX_DISTANCE;
+	private double MAX_SCORE;
 	private ArrayList<HashMap<Integer,Double>> junctions;
-	
-	
-	
-	
-	private double powerDepth; // = DEPTH;
-	private double pillDepth; // = DEPTH;
+	// There will be DEPTH hashmaps in this arraylist. For each hashmaps, it would populate that junction node with its (max) safety score.
+	private double powerDepth;
+	private double pillDepth;
+	public double[] values;
+	// the value for each features, the first DEPTH is the safty score for every junction, the fifth is used to measure the distance
+	// with the closest pill, the sixth is used to measure the score of current move, the seventh is used to measure the best score in
+	// other possible move
 
-	// Feature values
-	public double[] values; // = new double[FEATURES];
-
-	/** Set up data structures. */
-	public CustomFeatureSet() {		
+	public CustomFeatureSet() {
+		DEPTH = 4;
+		FEATURES = 7;
 		init();
 	}
 	
@@ -51,48 +38,44 @@ public class CustomFeatureSet extends FeatureSet {
 	}
 	
 	private void init(){
+		MAX_DISTANCE = 200;
+		MAX_SCORE = 250; //(MAX_DISTANCE/4)^2, according to the score method
 		values = new double[FEATURES];
-		powerDepth = DEPTH;
-		pillDepth = DEPTH;
-		junctions = new ArrayList<HashMap<Integer,Double>>();
+		powerDepth = pillDepth = DEPTH;
+		junctions = new ArrayList<>();
 		for (int i=0; i<DEPTH; i++)
-			junctions.add(new HashMap<Integer,Double>());
+			junctions.add(new HashMap<>());
 	}
 
-	/** Report how many features there are. */
 	public int size() {
-		return values.length;
+		return FEATURES;
 	}
 
-	/** Retrieve a feature value. */
 	public double get(int i) {
 		return values[i];
 	}
 
-	/** Extract a feature set for this state-action pair. */
-// So this is similar to the action-dependent features in HFO	
+	// calculate the values array and use it to build a new FeatureSet
 	public FeatureSet extract(Game game, MOVE move) {
 		CustomFeatureSet features = new CustomFeatureSet();
 		features.setValues(game, move);
 		return features;
 	}
 
-	/** Compute feature values in [0,1). */
+	// calculate each features and store them in values array
 	private void setValues(Game game, MOVE move) {
-		
-		// Things ahead?
+
 		int node = game.getPacmanCurrentNodeIndex();
 		exploreJunctions(game, node, move, 0, 0);
 
-		// Safety of junctions?
-// Basically checks the most safe junction at each depth, and constrains by first junction.
-// Seems like it should be constraining by all the ones before and not just the first... 
 		double[] safety = new double[DEPTH];
+		double min = Double.POSITIVE_INFINITY;
 		for (int i=0; i<DEPTH; i++) {
 			for (Integer n : junctions.get(i).keySet()) {
 				safety[i] = Math.max(safety[i], junctions.get(i).get(n));
-				safety[i] = Math.min(safety[0], safety[i]);
+				safety[i] = Math.min(min, safety[i]);
 			}
+			min = Math.min(safety[i], min);
 		}
 
 		// Feast opportunity?
@@ -343,23 +326,23 @@ public class CustomFeatureSet extends FeatureSet {
 // Calculates a score of safety for reaching a node that is myDistance away from current position
 // It's basically just the difference in distance between you and the closest ghost to the target. 	
 	private double safety(Game game, Integer node, double myDistance) {
-		double[] enemyDistances = enemyNodeDistances(game, node);
-		Arrays.sort(enemyDistances);
-		//return enemyDistances[0] - myDistance - game.constants.EAT_DISTANCE;
-		if (enemyDistances[0] == MAX_DISTANCE)
-			return enemyDistances[0];// there is no ghosts, consider it safe
-		else 
-			return enemyDistances[0] - myDistance - game.constants.EAT_DISTANCE;
+
+		double enemyDistances = enemyNodeDistances(game, node);
+		if (enemyDistances == MAX_DISTANCE)
+			return enemyDistances;// there is no ghosts, consider it safe
+		else
+			return enemyDistances - myDistance - game.constants.EAT_DISTANCE;
 	}
 
 	/** Compute relevant enemy distances to a nearby node. */
 // If the ghost is edible, he is shown as max distance. This is paired with safety, so essentially
 // if a ghost is edible, that node will have a high safety score.
-	private double[] enemyNodeDistances(Game game, int node) {
+	private double enemyNodeDistances(Game game, int node) {
 
-		double[] distances = new double[GHOST.values().length];
-		for (int i=0; i<distances.length; i++)
-			distances[i] = MAX_DISTANCE;
+		double tmp;
+		int len = GHOST.values().length;
+		double distances;
+		distances = MAX_DISTANCE;
 
 		for (GHOST ghost : GHOST.values()) {
 			if (!game.isGhostEdible(ghost)) {
@@ -373,7 +356,8 @@ public class CustomFeatureSet extends FeatureSet {
 					if (game.getDistance(myNode, node, DM.PATH) < game.getDistance(myNode, ghostNode, DM.PATH)) {
 
 						MOVE ghostMove = game.getGhostLastMoveMade(ghost);
-						distances[ghost.ordinal()] = game.getDistance(ghostNode, node, ghostMove, DM.PATH);
+						tmp = game.getDistance(ghostNode, node, ghostMove, DM.PATH);
+						if (tmp < distances) distances = tmp;
 					}
 				}
 			}
@@ -381,6 +365,7 @@ public class CustomFeatureSet extends FeatureSet {
 
 		return distances;
 	}
+
 	public boolean hasPowerPillAvailable(Game game) {
         int [] indexs = game.getPowerPillIndices();
         if (indexs.length==0) return false;
