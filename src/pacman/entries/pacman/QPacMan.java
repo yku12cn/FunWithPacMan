@@ -1,12 +1,14 @@
 package pacman.entries.pacman;
 
-import java.util.Random;
 import pacman.controllers.Controller;
-import pacman.game.Game;
 import pacman.game.Constants.MOVE;
+import pacman.game.Game;
+
+import java.io.*;
+import java.util.Random;
 
 
-public class QPacMan extends Controller<MOVE> {
+public class QPacMan extends Controller<MOVE> implements Serializable {
 
     /** Initialize the policy. */
     public QPacMan(FeatureSet proto) {
@@ -36,8 +38,8 @@ public class QPacMan extends Controller<MOVE> {
     }
 
     /** Prepare for the next move, and learn if appropriate. */
-    public void prepare(Game game) {
-
+    public double prepare(Game game) {
+        double tmp = 0;
         // Eligibility traces
         if (last != best) Qfunction.clearTraces();
         else Qfunction.decayTraces(r*lambda);
@@ -52,7 +54,11 @@ public class QPacMan extends Controller<MOVE> {
             evaluateMoves(game);
             delta = delta + r * Qs[best];
         }
-        if (!testMode) Qfunction.updateWeights(alpha*delta);
+        if (!testMode) {
+            tmp = Qfunction.updateWeights(alpha*delta);
+        }
+        //System.out.println("delta is: " + delta);
+        return tmp;
     }
 
     /** Compute predictions for moves in this state. */
@@ -71,6 +77,19 @@ public class QPacMan extends Controller<MOVE> {
         // Explore or exploit
         if (!testMode && random.nextDouble() < e) last = random.nextInt(length);
         else last = best;
+    }
+
+    public void save() throws IOException {
+        FileOutputStream fos=new FileOutputStream("policy");
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(Qfunction);
+        oos.close();
+    }
+    public void load() throws IOException, ClassNotFoundException {
+        FileInputStream fis = new FileInputStream("policy");
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        this.Qfunction= (QFunction) ois.readObject();
+
     }
 
     private Random random = new Random();

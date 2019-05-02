@@ -2,18 +2,18 @@ package pacman;
 
 import pacman.controllers.HumanController;
 import pacman.controllers.KeyBoardInput;
-import pacman.game.Constants;
-import java.util.EnumMap;
-import java.util.Random;
-import pacman.entries.ghosts.*;
+import pacman.entries.ghosts.StandardGhosts;
 import pacman.entries.pacman.CustomFeatureSet;
-import pacman.entries.pacman.DepthFeatureSet;
 import pacman.entries.pacman.FeatureSet;
 import pacman.entries.pacman.QPacMan;
-import pacman.game.Game;
-import pacman.game.GameView;
+import pacman.game.Constants;
 import pacman.game.Constants.GHOST;
 import pacman.game.Constants.MOVE;
+import pacman.game.Game;
+import pacman.game.GameView;
+
+import java.util.EnumMap;
+import java.util.Random;
 
 public class PacmanDemo {
 
@@ -49,40 +49,103 @@ public class PacmanDemo {
     }
 
     /** RL demo **/
-    public static void RLdemo(){
+    public static void RLdemo (){
 
         init();
         defaultC.DELAY = defaultC.DELAY*5;
-        FeatureSet feature;
+        FeatureSet feature = new CustomFeatureSet();
 
-        if (Choice.startsWith("custom"))  feature = new CustomFeatureSet();
-        else feature = new DepthFeatureSet();
 
         QPacMan pacman = new QPacMan(feature);
-        double[] initialData = new double[0];
-
-        // evaluate the random policy
-        double [] result = perform(pacman, test_time);
-
-        System.out.println("score at start = " + result[0]);
-
-        int num = 0;
-        for (int x = 1; x <= train_time; x++) {
-            double[] data = new double[initialData.length];
-            train(pacman);
-            num++;
-            double[] episode_data = new double[0];
-
-            for (int d=0; d<data.length; d++) data[d] += episode_data[d];
-
-            double [] result1 = perform(pacman, test_time) ;
-            double score = result1[0];		// average score over test number of games
-            System.out.println("episode: " + num + "   score: " + score);
-        }
+//        double[] initialData = new double[0];
+//
+//        // evaluate the random policy
+//        double [] result = perform(pacman, test_time);
+//
+//        System.out.println("score at start = " + result[0]);
+//
+//        StandardChartTheme mChartTheme = new StandardChartTheme("CN");
+//        mChartTheme.setLargeFont(new Font("Sans-serif", Font.BOLD, 20));
+//        mChartTheme.setExtraLargeFont(new Font("Sans-serif", Font.PLAIN, 15));
+//        mChartTheme.setRegularFont(new Font("Sans-serif", Font.PLAIN, 15));
+//        ChartFactory.setChartTheme(mChartTheme);
+//        DefaultCategoryDataset mDataset = new DefaultCategoryDataset();
+//
+//
+//        int num = 0;
+//        int show = 1;
+//        double show_score = 0;
+//        ArrayList<String> strs = new ArrayList<>();
+//        for (int x = 1; x <= train_time; x++) {
+//
+//            double error = train(pacman);
+//            num++;
+//
+//            double [] result1 = perform(pacman, test_time) ;
+//            double score = result1[0];		// average score over test number of games
+//
+//            show++;
+//            show_score = show_score*0.9 + score*0.1;
+//            if (show%10==0) {
+//                mDataset.addValue(show_score, "Scores", Integer.toString(show));
+//            }
+//
+//            strs.add(error + ","+score+"\n");
+//            System.out.println("episode: " + num + "   score: " + score);
+//        }
+//
+//        String fileName = "error2.csv";
+//        try {
+//            FileWriter writer = new FileWriter(fileName);
+//            for (int i = 0; i < strs.size(); i++) {
+//                writer.write(strs.get(i));
+//            }
+//            writer.close();
+//        }
+//        catch (Exception e) {
+//
+//        }
+//        try {
+//            pacman.save();
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//
+//
+//        JFreeChart mChart = ChartFactory.createLineChart(
+//                "Score Trend",
+//                "eposide",
+//                "Scores",
+//                mDataset,
+//                PlotOrientation.VERTICAL,
+//                true,
+//                true,
+//                false);
+//
+//        CategoryPlot mPlot = (CategoryPlot)mChart.getPlot();
+//        mPlot.setBackgroundPaint(Color.LIGHT_GRAY);
+//        mPlot.setRangeGridlinePaint(Color.BLUE);//背景底部横虚线
+//        mPlot.setOutlinePaint(Color.BLACK);//边界线
+//
+//        ChartFrame mChartFrame = new ChartFrame("Score Trend", mChart);
+//        mChartFrame.pack();
+//        mChartFrame.setVisible(true);
+//
+//
         // vision of the game
         Game game=new Game(random.nextLong(), defaultC);
+        System.out.println(game.getPillIndices().length);
         pacman.initialize(game, true);
         GameView gv=new GameView(game).showGame();
+
+
+        try {
+            pacman.load();
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
         while(!game.gameOver()) {
             game.advanceGame(pacman.getMove(game.copy(), -1), getGhostMove(game));
             pacman.prepare(game);
@@ -98,14 +161,17 @@ public class PacmanDemo {
 
     /** Train a learner */
 
-    public static void train(QPacMan pacman) {
+    public static double train(QPacMan pacman) {
 
         Game game = new Game(random.nextLong(), defaultC);
         pacman.initialize(game, false);
+        double sum = 0;
         while(!game.gameOver()) {
             game.advanceGame(pacman.getMove(game.copy(), -1), getGhostMove(game));
-            pacman.prepare(game);
+            sum += Math.abs(pacman.prepare(game));
         }
+
+        return sum;
     }
 
     /** Estimate the current performance of a learner. */
@@ -132,7 +198,7 @@ public class PacmanDemo {
 
 
     public static String Choice = "customS";
-    public static int train_time = 400;
+    public static int train_time = 2000;
     public static int test_time = 1; // test episodes
     public static Random random = new Random();
     public static StandardGhosts ghostsS = new StandardGhosts();

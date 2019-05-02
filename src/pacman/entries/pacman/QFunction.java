@@ -1,9 +1,11 @@
 package pacman.entries.pacman;
 
+import java.io.Serializable;
+
 /**
  * A linear function of the feature values.
  */
-public class QFunction {
+public class QFunction implements Serializable {
 
 	private double[] weights; // Weight vector
 	private double bias;
@@ -29,11 +31,15 @@ public class QFunction {
 	}
 
 	/** Gradient-descent weight update - with eligibility traces. */
-	public void updateWeights(double update) {
-		for (int i = 0; i < length; i++) {
+	public double updateWeights(double update) {
+		double sum = 0;
+
+	    for (int i = 0; i < length; i++) {
             weights[i] = weights[i] + update * elig[i];
+            sum+= Math.abs(update * elig[i]);
         }
 		bias = bias + update * e_bias;
+		return sum;
 	}
 	
 	/** Zero out the eligibility traces. */
@@ -59,4 +65,5 @@ public class QFunction {
         }
 		e_bias++;
 	}
+
 }
