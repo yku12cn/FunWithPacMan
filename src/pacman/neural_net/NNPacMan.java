@@ -25,7 +25,7 @@ public class NNPacMan {
     private static LineGhosts LinGhosts = new LineGhosts();
 
     public NNPacMan(Game game) {
-        brain = new JyNN(0.1f, 0.00001f, game.getNumberOfNodes() - 1, 100, 4);
+        brain = new JyNN(0.3f, 0.00001f, game.getNumberOfNodes() - 1, 100, 100, 4);
 
         //Setting random table
         rndT = new float[4][];
@@ -93,6 +93,7 @@ public class NNPacMan {
      **/
     public MOVE getMove(Game game, boolean rnd) {
         brain.forward(readNode(game)); //Analyze game
+        System.out.println(brain.X[brain.layer - 1]);
         MOVE[] rMoves = sortPMoves(game, brain.X[brain.layer - 1].getMat()[0]); //Find Sorted possible moves
         //Select random move
         if(rnd){
@@ -123,7 +124,7 @@ public class NNPacMan {
     /** Evaluate current situation using NN **/
     private float NNevalScore(Game game){
         if(game.getPacmanNumberOfLivesRemaining()==0)
-            return -10000;  //If Pacman get killed, just return a large negative number.
+            return 0;  //If Pacman get killed, just return a large negative number.
         brain.forward(readNode(game)); //Analyze game
         float [] sList = brain.X[brain.layer - 1].getMat()[0]; //get score list
         MOVE[] rMoves = sortPMoves(game, sList); //Find Sorted possible moves
@@ -148,7 +149,9 @@ public class NNPacMan {
      * Must use game.copy() to pass game.
      * Otherwise, it will mess up your current game **/
     private float pseudoPlay(Game game, float [] pdMoves, int depth){
-        int rs = game.getScore();
+        int rs = game.getScore(); // last score
+        int factor = depth;
+        float calscore = 0;
         //int rt = game.getTotalTime();
         float [] rndP;
         MOVE nextM;
@@ -165,13 +168,14 @@ public class NNPacMan {
             nextM = rMoves[(R>rndP[0] ? 1 : 0) + (R>rndP[1] ? 1 : 0) + (R>rndP[2] ? 1 : 0)];
             game.advanceGame(nextM, GhostMove(game, game.constants.GHOST_TYPE)); //Play a move
             depth -= 1;
+            calscore += (float)(game.getScore() - rs) * (float)depth/(float)factor; //Find actual score changes.
+            rs = game.getScore();
         }
-        rs = game.getScore() - rs; //Find actual score changes.
         //rt = game.getTotalTime() - rt; //Find how long past.
         if(!game.gameOver()){
-            return (float)rs + NNevalScore(game)*this.predictF;
+            return (float)calscore + NNevalScore(game)*this.predictF;
         }else {
-            return (float)rs;
+            return (float)calscore;
         }
     }
 
@@ -189,10 +193,10 @@ public class NNPacMan {
 
     /** Reference strategy Player **/
     public MOVE TgetMove(Game game, int depth){
-        return sortPMoves(game,strategist(game, depth).getMat()[0])[0];
-//        Jymax A = strategist(game, depth);
-//        System.out.println(A);
-//        return sortPMoves(game,A.getMat()[0])[0];
+//        return sortPMoves(game,strategist(game, depth).getMat()[0])[0];
+        Jymax A = strategist(game, depth);
+        System.out.println(A);
+        return sortPMoves(game,A.getMat()[0])[0];
     }
 
     /** Train a round **/
@@ -200,7 +204,7 @@ public class NNPacMan {
         Jymax label;
         Jymax prediction = new Jymax(1,4); //Set container for prediction;
         while(!game.gameOver()) {
-            label = strategist(game,20); //Get precise evaluation
+            label = strategist(game,2000); //Get precise evaluation
             brain.forward(readNode(game)); //Let brain think
             prediction.set(brain.X[brain.layer - 1]); //Update prediction result;
             brain.backUpdate(label); //Train brain

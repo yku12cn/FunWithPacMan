@@ -68,21 +68,19 @@ public class RunTest {
         Game game=new Game(rng.nextLong(), defaultConstants);
         NNPacMan brain = new NNPacMan(game);
 
-        brain.train(game,10000);
-        brain.saveBrain("myBrain.dat"); // Save training result
-
+//        brain.train(game,3000);
+//        brain.saveBrain("myBrain.dat"); // Save training result
+//        brain.loadBrain("myBrain.dat");
         HumanController human = new HumanController(new KeyBoardInput());
-//        for(int i = 0; i< game.getNumberOfNodes() - 1; i++){
-//            System.out.println(game.currentMaze.graph[i].pillIndex);
-//        }
 
         GameView gv=new GameView(game).showGame();
         gv.getFrame().addKeyListener(human.getKeyboardInput());
 
         while(!game.gameOver()) {
             //game.advanceGame(brain.TgetMove(game,5), getGhostMove(game, game.constants.GHOST_TYPE));
-            game.advanceGame(brain.getMove(game,false), getGhostMove(game, game.constants.GHOST_TYPE));
-            //System.out.println(game.getTotalTime());
+            MOVE next = brain.TgetMove(game,2000000);
+            System.out.println(next);
+            game.advanceGame(next, getGhostMove(game, game.constants.GHOST_TYPE));
             try {
                 Thread.sleep(defaultConstants.DELAY);
             } catch (Exception e) {
