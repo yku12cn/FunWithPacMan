@@ -7,7 +7,7 @@ import java.util.EnumMap;
 import java.util.Random;
 import pacman.entries.ghosts.*;
 import pacman.entries.pacman.CustomFeatureSet;
-import pacman.entries.pacman.DepthFeatureSet;
+
 import pacman.entries.pacman.FeatureSet;
 import pacman.entries.pacman.QPacMan;
 import pacman.game.Game;
@@ -55,8 +55,7 @@ public class PacmanDemo {
         defaultC.DELAY = defaultC.DELAY*5;
         FeatureSet feature;
 
-        if (Choice.startsWith("custom"))  feature = new CustomFeatureSet();
-        else feature = new DepthFeatureSet();
+        feature = new CustomFeatureSet();
 
         QPacMan pacman = new QPacMan(feature);
         double[] initialData = new double[0];
@@ -131,7 +130,7 @@ public class PacmanDemo {
     }
 
 
-    public static String Choice = "customS";
+    public static String Choice = "Q";
     public static int train_time = 400;
     public static int test_time = 1; // test episodes
     public static Random random = new Random();
